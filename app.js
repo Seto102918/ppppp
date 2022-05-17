@@ -32,16 +32,6 @@ admin.initializeApp({
   databaseURL: "https://teskotl-default-rtdb.firebaseio.com"
 });
 
-// function getdata(path){
-//     const ref = admin.database().ref(path);
-
-//     ref.on('value', (snapshot) => {
-//         console.log(snapshot.val());
-
-//     }, (errorObject) => {
-//         console.log('The read failed: ' + errorObject.name);
-//     }); 
-// }
 function getdate(){
     const date_ob = new Date()
     let date = date_ob.getDate();
@@ -133,7 +123,7 @@ function ehe(){
     });
     
     console.log("End of EHE")
-    http.get("https://serverfirebasenyaseto.herokuapp.com/");
+    http.get("http://serverfirebasenyaseto.herokuapp.com/");
 }
 ehe()
 setInterval(ehe,900000)
