@@ -132,6 +132,7 @@ function ehe(){
     });
     
     console.log("End of EHE")
+    http.get("https://serverfirebasenyaseto.herokuapp.com/");
 }
 ehe()
 setInterval(ehe,900000)
@@ -146,7 +147,3 @@ app.listen(port,function(error){
         console.log('Server is listening to port' + port)
     }
 })
-
-module.exports = {
-    admin
-}
