@@ -1,3 +1,7 @@
+let port = process.env.PORT || 3000;
+
+console.log("process.env.PORT" + process.env.PORT)
+console.log("port" + port)
 
 const fs = require('fs')
 const admin = require('firebase-admin')
@@ -133,12 +137,7 @@ ehe()
 setInterval(ehe,900000)
 
 /////////////////////////////////////////APP///////////////////////////////////////////
-var port
-if (!process.env.PORT == undefined){
-    port = process.env.PORT
-}else{
-    port = 3000
-}
+
 
 app.listen(port,function(error){
     if(error){
