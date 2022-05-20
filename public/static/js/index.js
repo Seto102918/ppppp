@@ -69,14 +69,12 @@ function createLinechart(data){
         .x(function(d) { return x(d.time) })
         .y(function(d) { return y(d.value) })
         )
-
 }
 
 function update(){
   createLinechart(timeData)
 }
 update()
-setInterval(update,900000)
 
 window.addEventListener('resize', function(event) {
   d3.selectAll('svg').remove();
@@ -86,3 +84,5 @@ window.addEventListener('resize', function(event) {
 
   createLinechart(timeData)
 }, false);
+
+window.onload = timedRefresh(900000);
