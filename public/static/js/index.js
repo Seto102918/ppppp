@@ -3,7 +3,7 @@ import axios from 'https://cdn.skypack.dev/axios';
 
 
 
-function getData(){
+function ambildata(){
   const dataSet = async function getData() {
       return await axios.get('/api/data');
   }
@@ -73,7 +73,7 @@ function createLinechart(data){
 }
 
 function update(){
-  var timeData = getData()
+  var timeData = ambildata()
   createLinechart(timeData)
 }
 
