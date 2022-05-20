@@ -2,23 +2,28 @@ import * as d3 from "https://cdn.skypack.dev/d3@7";
 import axios from 'https://cdn.skypack.dev/axios';
 
 
-const dataSet = async function getData() {
-    return await axios.get('/api/data');
+
+function getData(){
+  const dataSet = async function getData() {
+      return await axios.get('/api/data');
+  }
+  var data  = await dataSet()
+  var datastr = JSON.stringify(data.data)
+
+  const timeParse = d3.timeParse("%H:%M | %d-%b-%Y")
+
+  var timeData = []
+
+  data.data.forEach(data => {
+      var hasil = timeParse(data.time)
+      var obj = {"value": data.value, "time": hasil}
+      timeData.push(obj)
+  });
+
+  console.log(timeData)
+
+  return timeData
 }
-var data  = await dataSet()
-var datastr = JSON.stringify(data.data)
-
-const timeParse = d3.timeParse("%H:%M | %d-%b-%Y")
-
-var timeData = []
-
-data.data.forEach(data => {
-    var hasil = timeParse(data.time)
-    var obj = {"value": data.value, "time": hasil}
-    timeData.push(obj)
-});
-
-console.log(timeData)
 
 function createLinechart(data){
   var parentDiv = document.getElementById("my_dataviz");
@@ -67,7 +72,12 @@ function createLinechart(data){
 
 }
 
-createLinechart(timeData)
+function update(){
+  var timeData = getData()
+  createLinechart(timeData)
+}
+
+setInterval(update,900000)
 
 window.addEventListener('resize', function(event) {
   d3.selectAll('svg').remove();
