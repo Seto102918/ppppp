@@ -4,23 +4,23 @@ import axios from 'https://cdn.skypack.dev/axios';
 
 
 
-  const dataSet = async function getData() {
-      return await axios.get('/api/data');
-  }
-  var data  = await dataSet()
-  var datastr = JSON.stringify(data.data)
+const dataSet = async function getData() {
+    return await axios.get('/api/data');
+}
+var data  = await dataSet()
+var datastr = JSON.stringify(data.data)
 
-  const timeParse = d3.timeParse("%H:%M | %d-%b-%Y")
+const timeParse = d3.timeParse("%H:%M | %d-%b-%Y")
 
-  var timeData = []
+var timeData = []
 
-  data.data.forEach(data => {
-      var hasil = timeParse(data.time)
-      var obj = {"value": data.value, "time": hasil}
-      timeData.push(obj)
-  });
+data.data.forEach(data => {
+    var hasil = timeParse(data.time)
+    var obj = {"value": data.value, "time": hasil}
+    timeData.push(obj)
+});
 
-  console.log(timeData)
+console.log(timeData)
 
 
 
@@ -73,10 +73,9 @@ function createLinechart(data){
 }
 
 function update(){
-  var timeData = ambildata()
   createLinechart(timeData)
 }
-
+update()
 setInterval(update,900000)
 
 window.addEventListener('resize', function(event) {
