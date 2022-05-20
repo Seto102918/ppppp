@@ -1,8 +1,7 @@
 import * as d3 from "https://cdn.skypack.dev/d3@7";
 import axios from 'https://cdn.skypack.dev/axios';
 
-
-
+console.log('js TOP')
 
 const dataSet = async function getData() {
     return await axios.get('/api/data');
@@ -84,5 +83,3 @@ window.addEventListener('resize', function(event) {
 
   createLinechart(timeData)
 }, false);
-
-window.onload = timedRefresh(900000);

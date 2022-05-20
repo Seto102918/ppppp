@@ -122,7 +122,6 @@ function ehe(){
         res.json(data);
     });
     
-    
     console.log("End of EHE")
     http.get("http://serverfirebasenyaseto.herokuapp.com/");
     
@@ -139,4 +138,4 @@ app.listen(port,function(error){
     }else{
         console.log('Server is listening to port' + port)
     }
-    })
+})
