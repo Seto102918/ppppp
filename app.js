@@ -121,13 +121,7 @@ function ehe(){
         
         res.json(data);
     });
-    app.listen(port,function(error){
-    if(error){
-        console.log("WARNING ERROR" + error)
-    }else{
-        console.log('Server is listening to port' + port)
-    }
-    })
+    
     
     console.log("End of EHE")
     http.get("http://serverfirebasenyaseto.herokuapp.com/");
@@ -139,3 +133,10 @@ setInterval(ehe,900000)
 /////////////////////////////////////////APP///////////////////////////////////////////
 
 
+app.listen(port,function(error){
+    if(error){
+        console.log("WARNING ERROR" + error)
+    }else{
+        console.log('Server is listening to port' + port)
+    }
+    })
