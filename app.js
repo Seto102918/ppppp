@@ -34,31 +34,31 @@ admin.initializeApp({
   storageBucket:'gs://teskotl.appspot.com'
 });
 
-function getdate(when){
+function getdate(){
     const date_ob = new Date()
     let date = date_ob.getDate();
     let month = date_ob.getMonth() + 1;
 
-    if(when == "yesterday"){
-        date = date - 1
-        console.log("Yesterday")
+    // if(when == "yesterday"){
+    //     date = date - 1
+    //     console.log("Yesterday")
 
-        if(date == 0 ){
-            month = month - 1
-                if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8|| month == 10 || month == 12) {
-                    date = 30
-                }else if(month == 4|| month == 6 || month == 9|| month == 11){
-                    date = 31
-                } else if(month == 2){
-                    if (year % 4){
-                        date = 29
-                    } else date = 28
-                } else if (month == 0){
-                    month = 12
-                    date = 30
-                } else console.log("Date Error")
-        }
-    }else console.log("Today")
+    //     if(date == 0 ){
+    //         month = month - 1
+    //             if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8|| month == 10 || month == 12) {
+    //                 date = 30
+    //             }else if(month == 4|| month == 6 || month == 9|| month == 11){
+    //                 date = 31
+    //             } else if(month == 2){
+    //                 if (year % 4){
+    //                     date = 29
+    //                 } else date = 28
+    //             } else if (month == 0){
+    //                 month = 12
+    //                 date = 30
+    //             } else console.log("Date Error")
+    //     }
+    // }else console.log("Today")
 
         if(month == 1) month = 'Jan'
         if(month == 2) month = 'Feb'
@@ -94,12 +94,16 @@ async function uploadFile(filePath,destFileName) {
     console.log(`${filePath} uploaded to teskotl`);
 }
 
-const ref = admin.database().ref('value');
+
 // const bucket = admin.storage.getStorage().bucket();
 // const storage = new Storage();
 
+
+
 function ehe(){
-    
+
+    const ref = admin.database().ref('value');
+
     ref.once('value', (snapshot) => {
 
         const date_ob = new Date()
@@ -109,7 +113,7 @@ function ehe(){
         let minutes = date_ob.getMinutes();
         let timeHM = `${hours}:${minutes}`
 
-        let timeDMY = getdate("today")
+        let timeDMY = getdate()
 
         console.log(timeDMY)
         console.log(timeHM)
@@ -142,12 +146,13 @@ function ehe(){
     }, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
 
 
-    let yestimeDMY = getdate("yesterday")
-    console.log(yestimeDMY)
+    // let yestimeDMY = getdate("yesterday")
+    // console.log(yestimeDMY)
 
     app.get('/', (req, res) => {
         res.render('home');
     });
+    
 
     app.get('/api/data', (req, res) => {
 
@@ -180,6 +185,6 @@ app.listen(port,function(error){
 
     if(error){
         console.log("WARNING ERROR" + error)
-    }else console.log('Server is listening to port' + port)
+    } else console.log('Server is listening to port' + port)
     
 })

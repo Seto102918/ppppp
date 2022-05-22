@@ -69,8 +69,6 @@ body {
     align-items: center;
     justify-content: center;
 } */
-/* #my_dataviz{
-    margin: 10vh 5vw 0 5vw;
-    width: 90vw;
-    height: 80vh;
-} */
+#my_dataviz{
+    background-color: white;
+}
