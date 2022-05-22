@@ -10,7 +10,7 @@ body {
     background-color: #202020;
 }
 
-.nav {
+/* .nav {
     background-color: #181818;
     padding: 2vh 0;
     display: flex;
@@ -68,9 +68,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-#my_dataviz{
+} */
+/* #my_dataviz{
     margin: 10vh 5vw 0 5vw;
     width: 90vw;
     height: 80vh;
-}
+} */

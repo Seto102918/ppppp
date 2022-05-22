@@ -9,25 +9,39 @@ const dataSet = async function getData() {
 var data  = await dataSet()
 var datastr = JSON.stringify(data.data)
 
+
+
 const timeParse = d3.timeParse("%H:%M | %d-%b-%Y")
 
 var timeData = []
-
+var timeData2 = []
 data.data.forEach(data => {
     var hasil = timeParse(data.time)
     var obj = {"value": data.value, "time": hasil}
     timeData.push(obj)
 });
-
 console.log(timeData)
 
 
+// const dataSet2 = async function getData2() {
+//     return await axios.get('/api/data2');
+// }
+// var data2  = await dataSet2()
+// var datastr2 = JSON.stringify(data2.data)
+
+
+// data2.data.forEach(data => {
+//     var hasil = timeParse(data.time)
+//     var obj = {"value": data.value, "time": hasil}
+//     timeData.push(obj)
+// });
+// console.log(data2)
 
 
 function createLinechart(data){
   var parentDiv = document.getElementById("my_dataviz");
-  var w = parentDiv.clientWidth;
-  var h = parentDiv.clientHeight;
+  var w = 1366 || parentDiv.clientWidth;
+  var h = 768 || parentDiv.clientHeight;
   console.log( "h: " + h + "|| w: " + w)
 
   const margin = {top: 10, right: 30, bottom: 30, left: 60},
