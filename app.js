@@ -39,8 +39,6 @@ function getdate(when){
     let date = date_ob.getDate();
     let month = date_ob.getMonth() + 1;
 
-        console.log(when == "yesterday")
-
     if(when == "yesterday"){
         date = date - 1
         console.log("Yesterday")
@@ -112,7 +110,6 @@ function ehe(){
         let timeHM = `${hours}:${minutes}`
 
         let timeDMY = getdate("today")
-        
 
         console.log(timeDMY)
         console.log(timeHM)
@@ -177,7 +174,7 @@ function ehe(){
 
 
 ehe()
-setInterval(ehe,900000)
+setInterval(ehe,10000)
 
 app.listen(port,function(error){
 
