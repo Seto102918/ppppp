@@ -174,7 +174,7 @@ function ehe(){
 
 
 ehe()
-setInterval(ehe,10000)
+setInterval(ehe,900000)
 
 app.listen(port,function(error){
 
