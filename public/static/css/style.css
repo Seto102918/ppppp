@@ -14,3 +14,7 @@ body {
 #my_dataviz{
     background-color: rgba(255, 255, 255, 0.3);
 }
+p {
+    font-size: 2vh;
+    color: white;
+}
