@@ -59,6 +59,7 @@ function createLinechart(data){
   var w = parentDiv.clientWidth || 1920;
   var h = parentDiv.clientHeight || 1080;
   console.log( "h: " + h + "|| w: " + w)
+  document.getElementById("p1").innerHTML = `${w} - ${h}`;
 
   const margin = {top: 10, right: 30, bottom: 30, left: 60},
     width = w - margin.left - margin.right,
