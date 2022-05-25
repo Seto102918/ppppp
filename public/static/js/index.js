@@ -56,8 +56,8 @@ console.log(timeData)
 
 function createLinechart(data){
   var parentDiv = document.getElementById("my_dataviz");
-  var w = 1366 || parentDiv.clientWidth;
-  var h = 768 || parentDiv.clientHeight;
+  var w = parentDiv.clientWidth || 1920;
+  var h = parentDiv.clientHeight || 1080;
   console.log( "h: " + h + "|| w: " + w)
 
   const margin = {top: 10, right: 30, bottom: 30, left: 60},
