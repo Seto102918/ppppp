@@ -3,7 +3,7 @@ import * as d3 from "https://cdn.skypack.dev/d3@7";
 import axios from 'https://cdn.skypack.dev/axios';
 
 console.log('js TOP')
-document.getElementById("p1").innerHTML = "world";
+// document.getElementById("p1").innerHTML = "world";
 
 const dataSet = async function getData() {
     return await axios.get('/api/data');
@@ -47,8 +47,8 @@ console.log(timeData)
 // var seriesData = dataSet.mapAs({ x: 0, value: 1 });
 // var chart = anychart.line();
 
-// chart.title('Acceptance of same-sex relationships in the US over the last 2 decades');
-// chart.yAxis().title('% of people who accept same-sex relationships');
+// chart.title('Acceptance of');
+// chart.yAxis().title('% of people who accept relationships');
 
 // var lineChart = chart.line(seriesData);
 // chart.container('container');
