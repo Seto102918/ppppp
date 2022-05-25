@@ -1,4 +1,4 @@
-* {
+/* * {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
 }
@@ -8,13 +8,18 @@ body {
     width: 100%;
     display: block;
     background-color: #202020;
-}
+} */
 
 
-#my_dataviz{
-    background-color: rgba(255, 255, 255, 0.3);
-}
 p {
-    font-size: 20vh;
+    font-size: 14px;
     color: white;
+}
+html,
+body,
+#container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
