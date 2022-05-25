@@ -10,65 +10,7 @@ body {
     background-color: #202020;
 }
 
-/* .nav {
-    background-color: #181818;
-    padding: 2vh 0;
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-    position: fixed;
-    top: 0;
-    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.165);
 
-}
-
-.nav::after {
-    content: "";
-    position: absolute;
-    height: 1px;
-    width: 100%;
-    bottom: 0;
-    background-color: white;
-    z-index: 100;
-}
-
-.peepo {
-    left: 0;
-    bottom: 0;
-    position: fixed;
-    height: 20vh;
-    z-index: 100;
-}
-
-.judul {
-    text-decoration: none;
-    font-weight: 800;
-    color: white;
-    margin: 0 1vw;
-    font-size: 3vh;
-}
-
-.list-menu li {
-    display: inline-block;
-    margin-inline: 1.2vw;
-    list-style: none;
-}
-
-.list-menu li a {
-    text-decoration: none;
-    color: white;
-    font-weight: 500;
-    font-size: 2vh;
-}
-.idk{
-    width: 100vw;
-    height: 100vh;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-} */
 #my_dataviz{
     background-color: rgba(255, 255, 255, 0.3);
 }

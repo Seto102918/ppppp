@@ -11,8 +11,6 @@ const dataSet = async function getData() {
 var data  = await dataSet()
 var datastr = JSON.stringify(data.data)
 
-
-
 const timeParse = d3.timeParse("%H:%M | %d-%b-%Y")
 
 var timeData = []
