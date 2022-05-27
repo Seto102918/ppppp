@@ -66,6 +66,7 @@ function createLinechart(data){
       .attr("stroke", "steelblue")
       .attr("stroke-width",2)
       .attr("d", d3.line()
+        .curve(d3.curveBasis)
         .x(function(d) { return x(d.time) })
         .y(function(d) { return y(d.value) })
         )
