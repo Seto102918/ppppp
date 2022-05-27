@@ -40,7 +40,7 @@ function createLinechart(data){
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`)
-        .attr("stroke","white");
+        .style("stroke", "white")
 
     var x = d3.scaleTime()
         .domain(d3.extent(data, function(d) { return d.time; }))
@@ -48,6 +48,7 @@ function createLinechart(data){
       
 
     svg.append("g")
+        
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
 
@@ -63,7 +64,7 @@ function createLinechart(data){
       .datum(data)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width",2)
       .attr("d", d3.line()
         .x(function(d) { return x(d.time) })
         .y(function(d) { return y(d.value) })
