@@ -1,9 +1,7 @@
 import * as d3 from "https://cdn.skypack.dev/d3@7";
-// import * as anychart from "https://cdn.anychart.com/releases/8.10.0/js/anychart-base.min.js";
 import axios from 'https://cdn.skypack.dev/axios';
 
 console.log('js TOP')
-// document.getElementById("p1").innerHTML = "world";
 
 const dataSet = async function getData() {
     return await axios.get('/api/data');
@@ -66,18 +64,37 @@ function createLinechart(data){
       .datum(data)
       .attr("fill", "none")
       .attr("stroke", "white")
-      .attr("stroke-width",5)
+      .attr("stroke-width",3)
       .attr("d", d3.line()
         .curve(d3.curveBasis)
         .x(function(d) { return x(d.time) })
         .y(function(d) { return y(d.value) })
         )
+
+    // Add the points
+    svg
+      .append("g")
+      .selectAll("dot")
+      .data(data)
+      .join("circle")
+        .attr("class", "myCircle")
+        .attr("cx", d => x(d.time))
+        .attr("cy", d => y(d.value))
+        .attr("r", 8)
+        .attr("stroke", "#69b3a2")
+        .attr("stroke-width", 3)
+        .attr("fill", "white")
+
+
+    
+        
 }
 
 function update(){
   createLinechart(timeData)
 }
 update()
+
 
 window.addEventListener('resize', function(event) {
   d3.selectAll('svg').remove();
@@ -87,39 +104,3 @@ window.addEventListener('resize', function(event) {
 
   createLinechart(timeData)
 }, false);
-
-
-
-
-
-// function getData() {
-//   return [
-//     ['1990',12],
-//     ['1991',14],
-//     ['1993',21],
-//     ['1994',21],
-//     ['1996',26],
-//     ['1998',26],
-//     ['2000',27],
-//     ['2002',31],
-//     ['2004',29],
-//     ['2006',31],
-//     ['2008',36],
-//     ['2010',41],
-//     ['2012',42],
-//     ['2014',48],
-//     ['2016',50],
-//     ['2018',57]
-//   ];
-// }
-
-// var dataSet = anychart.data.set(getData());
-// var seriesData = dataSet.mapAs({ x: 0, value: 1 });
-// var chart = anychart.line();
-
-// chart.title('Acceptance of');
-// chart.yAxis().title('% of people who accept relationships');
-
-// var lineChart = chart.line(seriesData);
-// chart.container('container');
-// chart.draw();
