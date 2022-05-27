@@ -36,9 +36,11 @@ function createLinechart(data){
 
   const svg = d3.select("#container")
     .append("svg")
+        .style("color", "white")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
+        .style("color", "white")
         .attr("transform", `translate(${margin.left},${margin.top})`)
         .style("stroke", "white")
 
@@ -63,8 +65,8 @@ function createLinechart(data){
     svg.append("path")
       .datum(data)
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width",2)
+      .attr("stroke", "white")
+      .attr("stroke-width",5)
       .attr("d", d3.line()
         .curve(d3.curveBasis)
         .x(function(d) { return x(d.time) })
