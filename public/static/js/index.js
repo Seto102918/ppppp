@@ -79,10 +79,10 @@ function createLinechart(data){
         .attr("class", "myCircle")
         .attr("cx", d => x(d.time))
         .attr("cy", d => y(d.value))
-        .attr("r", 8)
-        .attr("stroke", "#69b3a2")
+        .attr("r", 2)
+        .attr("stroke", "#ff893b")
         .attr("stroke-width", 3)
-        .attr("fill", "white")
+        .attr("fill", "#ff893b")
 
 
     
