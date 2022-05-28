@@ -27,7 +27,7 @@ function createLinechart(data){
   var h = parentDiv.clientHeight || 1080;
   console.log( "h: " + h + "|| w: " + w)
 
-  const margin = {top: 10, right: 30, bottom: 30, left: 60},
+  const margin = {top: 10, right: 30, bottom: 30, left: 40},
     width = w - margin.left - margin.right,
     height = h - margin.top - margin.bottom;
 
