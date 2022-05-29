@@ -39,26 +39,6 @@ function getdate(){
     let date = date_ob.getDate();
     let month = date_ob.getMonth() + 1;
 
-    // if(when == "yesterday"){
-    //     date = date - 1
-    //     console.log("Yesterday")
-
-    //     if(date == 0 ){
-    //         month = month - 1
-    //             if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8|| month == 10 || month == 12) {
-    //                 date = 30
-    //             }else if(month == 4|| month == 6 || month == 9|| month == 11){
-    //                 date = 31
-    //             } else if(month == 2){
-    //                 if (year % 4){
-    //                     date = 29
-    //                 } else date = 28
-    //             } else if (month == 0){
-    //                 month = 12
-    //                 date = 30
-    //             } else console.log("Date Error")
-    //     }
-    // }else console.log("Today")
 
         if(month == 1) month = 'Jan'
         if(month == 2) month = 'Feb'
@@ -173,7 +153,7 @@ function ehe(){
     // }
 
     console.log("End of EHE")
-    http.get("http://serverfirebasenyaseto.herokuapp.com/");
+    http.get("https://tes2idklg.herokuapp.com/");
     
 }
 
