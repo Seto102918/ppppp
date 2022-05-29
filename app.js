@@ -153,7 +153,7 @@ function ehe(){
     // }
 
     console.log("End of EHE")
-    http.get("https://tes2idklg.herokuapp.com/");
+    http.get("http://tes2idklg.herokuapp.com/");
     
 }
 
