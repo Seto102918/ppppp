@@ -37,9 +37,6 @@ admin.initializeApp({
   storageBucket:'gs://teskotl.appspot.com'
 });
 var bucket = admin.storage().bucket();
-let timeDMY = getdate();
-
-
 
 var moistureInput
 var temperatureInput
