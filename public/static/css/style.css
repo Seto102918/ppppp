@@ -153,6 +153,9 @@ p {
         height: 30%;
         margin: 0.5rem 1rem 1rem 1rem;
     }
+    #container svg {
+        transform: scaleX(1.04);
+    }
     #container2{
         min-height: 30vw;
         margin: 0.5rem 1rem 1rem 1rem;
