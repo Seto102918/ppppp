@@ -3,7 +3,8 @@ console.log("port" + port)
 
 const fs = require('fs')
 const admin = require('firebase-admin')
-const { Storage } = require('@google-cloud/storage')
+const { initializeApp, cert } = require('firebase-admin/app');
+const { getStorage } = require('firebase-admin/storage');
 var http = require("http")
 const express = require('express')
 const { engine } = require('express-handlebars')
@@ -35,16 +36,10 @@ admin.initializeApp({
   databaseURL: "https://teskotl-default-rtdb.firebaseio.com",
   storageBucket:'gs://teskotl.appspot.com'
 });
+var bucket = admin.storage().bucket();
+let timeDMY = getdate();
 
-async function uploadFile(filePath,destFileName) {
-    await storage.bucket(teskotl).upload(filePath, {
-      destination: destFileName,
-    });
-    console.log(`${filePath} uploaded to teskotl`);
-}
 
-// const bucket = admin.storage.getStorage().bucket();
-// const storage = new Storage();
 
 var moistureInput
 var temperatureInput
@@ -72,26 +67,28 @@ refmoisture.on('value', (snapshot) => {
         const data = require(`./public/static/data/${timeDMY}.json`)
         res.json(data);
     });
-    
-}, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
 
-
-reftemp.on('value', (snapshot) => {
-    let timeHM = getTime()
-    let timeDMY = getdate()
-
-    console.log(`temperature: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
-
-    existsSync(timeDMY, timeHM, snapshot.val(), "temperature")
-
-    app.get('/api/data', (req, res) => {
-        let timeDMY = getdate()
-        const data = require(`./public/static/data/${timeDMY}.json`)
-        console.log("api/data: " + data)
-        res.json(data);
-    });
+    bucket.upload(`./public/static/data/${timeDMY}.json`);
 
 }, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
+
+
+// reftemp.on('value', (snapshot) => {
+//     let timeHM = getTime()
+//     let timeDMY = getdate()
+
+//     console.log(`temperature: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
+
+//     existsSync(timeDMY, timeHM, snapshot.val(), "temperature")
+
+//     app.get('/api/data', (req, res) => {
+//         let timeDMY = getdate()
+//         const data = require(`./public/static/data/${timeDMY}.json`)
+//         console.log("api/data: " + data)
+//         res.json(data);
+//     });
+
+// }, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
 
 
 
