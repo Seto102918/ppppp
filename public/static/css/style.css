@@ -23,6 +23,8 @@ body {
     background-color: #0d1218;
     display: flex;
     flex-direction: column;
+    margin: 0;
+    padding: 0;
 }
 
 div{
@@ -135,6 +137,7 @@ p {
 
 @media screen and (max-width: 900px){
     .top{
+        padding: 1em 1em 0 1em;
         flex-direction: column;
     }
     .top-left{
