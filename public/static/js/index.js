@@ -3,6 +3,7 @@ import axios from 'https://cdn.skypack.dev/axios';
 import { getDatabase, ref, onValue} from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-database.min.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-analytics.js";
+//import * as gsap from "https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js";
 
 /////initialize DATABEZZ/////
 const firebaseConfig = {
@@ -33,16 +34,7 @@ var moistureData = []
 var temperatureData = []
 forEach()
 
-///////Buat Graph part 1
-var parentDiv = document.getElementById(`container`);
-var w = parentDiv.clientWidth || 720;
-var h = parentDiv.clientHeight || 360;
-console.log("h: " + h + "|| w: " + w)
-
-const margin = { top: 25, right: 30, bottom: 30, left: 50 },
-width = w - margin.left - margin.right,
-height = h - margin.top - margin.bottom;
-
+///////Buat Graph Top Left
 createTopLeft();
 
 ////TOP Right + Firebase RDB TopRight
@@ -75,11 +67,22 @@ window.addEventListener('resize', function (event) {
 
 function createTopLeft(){
   data = moistureData;
+  
+  var parentDiv = document.getElementById(`container`);
+  var w = parentDiv.clientWidth || 720;
+  var h = parentDiv.clientHeight || 360;
+  console.log("h: " + h + "|| w: " + w)
+
+  const margin = { top: 20, right: 30, bottom: 30, left: 50 },
+  width = w - margin.left - margin.right,
+  height = h - margin.top - margin.bottom;
+  console.log("height: " + height + "||   width: " + width)
+
   const svg = d3.select(`#container`)
     .append("svg")
     .style("color", "white")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", w)
+    .attr("height", h)
     .append("g")
     .style("color", "white")
     .attr("transform", `translate(${margin.left},${margin.top})`)
@@ -120,42 +123,6 @@ function createTopLeft(){
     .attr("stroke", "#ff893b")
     .attr("stroke-width", 3)
     .attr("fill", "#ff893b")
-    .on("mouseover", mouseover)
-    .on("mousemove", mousemove)
-    .on("mouseleave", mouseleave)
-
-  var Tooltip = d3.select("#container")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
-
-  var mouseover = function(d) {
-    Tooltip
-      .style("opacity", 1)
-    d3.select(this)
-      .style("stroke", "black")
-      .style("opacity", 1)
-  }
-
-  var mousemove = function(d) {
-    Tooltip
-      .html("The exact value of<br>this cell is: " + d.value)
-      .style("left", (d3.mouse(this)[0]+70) + "px")
-      .style("top", (d3.mouse(this)[1]) + "px")
-  }
-
-  var mouseleave = function(d) {
-    Tooltip
-      .style("opacity", 0)
-    d3.select(this)
-      .style("stroke", "none")
-      .style("opacity", 0.8)
-  }
 }
 
 function forEach(){
@@ -175,6 +142,6 @@ function forEach(){
 function move(persen) {
   persen = Math.ceil(persen)
   var elem = document.getElementById("myBar");
-  elem.style.width = persen + "%";
+  gsap.to(elem,{width: `${persen}%`, duration: 0.5, ease: 'back'})
 }
 
