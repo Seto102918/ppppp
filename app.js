@@ -48,8 +48,6 @@ refmoisture.on('value', (snapshot) => {
     existsSync(timeDMY, timeHM, snapshot.val(), "moisture")
     moistureInput = snapshot.val()
 
-   
-    
     app.get('/api/data', (req, res) => {
         const data = require(`./public/static/data/${timeDMY}.json`)
         res.json(data);
@@ -89,6 +87,7 @@ app.listen(port,function(error){
         console.log("WARNING ERROR" + error)
     } else console.log('Server is listening to port' + port)
 })
+
 
 /////////////////////////////////////////FAKSION///////
 function getdate(){
