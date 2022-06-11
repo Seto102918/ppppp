@@ -1,6 +1,4 @@
 let port = process.env.PORT || 1234
-console.log("port" + port)
-
 const fs = require('fs')
 const admin = require('firebase-admin')
 const { initializeApp, cert } = require('firebase-admin/app');
@@ -16,21 +14,19 @@ const { time } = require('console')
 const { rejects } = require('assert')
 const { resolve } = require('path')
 
-/////////////////////////////////////////APP///////////////////////////////////////////
+console.log("port" + port)
+/////////////////////////////////////////Express///////////////////////////////////////////
 app.use(express.static('public'));
-app.engine('handlebars', engine());
+app.engine('handlebars', engine({ 
+    defaultLayout: 'main',
+    partialsDir:'views/partials'
+}));
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
-app.listen(port,function(error){
-    if(error){ 
-        console.log("WARNING ERROR" + error)
-    } else console.log('Server is listening to port' + port)
-})
 
 //////////////////////////////////////////FIREBASE///////////////////////////////////////////
 var serviceAccount = require("./teskotl-firebase-adminsdk-ei2g0-7f8bf6a9d4.json")
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://teskotl-default-rtdb.firebaseio.com",
@@ -39,27 +35,21 @@ admin.initializeApp({
 var bucket = admin.storage().bucket();
 
 var moistureInput
-var temperatureInput
-
 const refmoisture = admin.database().ref('moisture');
-const reftemp = admin.database().ref('suhu');
+
+// var temperatureInput
+// const reftemp = admin.database().ref('suhu');
 
 refmoisture.on('value', (snapshot) => {
     let timeHM = getTime()
     let timeDMY = getdate()
-
     console.log(`moisture: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
 
+    existsSync(timeDMY, timeHM, snapshot.val(), "moisture")
     moistureInput = snapshot.val()
 
-    existsSync(timeDMY, timeHM, snapshot.val(), "moisture")
-
-    app.get('/', function (req, res) {
-        res.render('home', { 
-            moistureInput: moistureInput
-        });
-    });
-
+   
+    
     app.get('/api/data', (req, res) => {
         const data = require(`./public/static/data/${timeDMY}.json`)
         res.json(data);
@@ -87,8 +77,20 @@ refmoisture.on('value', (snapshot) => {
 
 // }, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
 
+///////////////////////////////////////LANJUT EXPRESS///////////////
+app.get('/', function (req, res) {
+    res.render('home',{
+        moistureInput: moistureInput
+    });
+});
 
+app.listen(port,function(error){
+    if(error){ 
+        console.log("WARNING ERROR" + error)
+    } else console.log('Server is listening to port' + port)
+})
 
+/////////////////////////////////////////FAKSION///////
 function getdate(){
     const date_ob = new Date()
     let date = date_ob.getDate();
@@ -108,16 +110,7 @@ function getdate(){
         if(month == 12) month = 'Dec'
 
     let year = date_ob.getFullYear();
-
-    let timeDMY = `${date}-${month}-${year}`
-    return timeDMY
-}
-
-async function writejson(timeDMY,isi){
-    var val = JSON.stringify(isi)
-    await fs.writeFile(`./public/static/data/${timeDMY}.json`, val, function(err, result) {
-        if(err) console.log('error', err);
-    });
+    return `${date}-${month}-${year}`
 }
 
 function getTime(){
@@ -125,6 +118,13 @@ function getTime(){
     let hours = date_ob.getHours();
     let minutes = date_ob.getMinutes();
     return `${hours}:${minutes}`;
+}
+
+async function writejson(timeDMY,isi){
+    var val = JSON.stringify(isi)
+    await fs.writeFile(`./public/static/data/${timeDMY}.json`, val, function(err, result) {
+        if(err) console.log('error', err);
+    });
 }
 
 function existsSync(timeDMY, timeHM, value, tipe){
@@ -143,7 +143,9 @@ function existsSync(timeDMY, timeHM, value, tipe){
             }else if(tipe == "temperature"){
                 filejson.temperature.push(isi)
             }
+
             writejson(timeDMY,filejson,tipe)
+            
         }catch (e) {console.log("Error" + e);}
         
     }else if (!fs.existsSync(`./public/static/data/${timeDMY}.json`)){
@@ -167,7 +169,7 @@ function existsSync(timeDMY, timeHM, value, tipe){
 
 }
 
-
 setTimeout(function(){
-    http.get("http://tes2idklg.herokuapp.com/")
+    http.get("http://setongeteslagi.herokuapp.com//")
 },900000)
+

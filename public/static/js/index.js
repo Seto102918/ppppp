@@ -1,6 +1,28 @@
 import * as d3 from "https://cdn.skypack.dev/d3@7";
 import axios from 'https://cdn.skypack.dev/axios';
+import { getDatabase, ref, onValue} from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-database.min.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-analytics.js";
 
+/////initialize DATABEZZ/////
+const firebaseConfig = {
+  apiKey: "AIzaSyAczB0gnXgHAvSIDHAvxvEEFlZdIOdhDUU",
+  authDomain: "teskotl.firebaseapp.com",
+  databaseURL: "https://teskotl-default-rtdb.firebaseio.com",
+  projectId: "teskotl",
+  storageBucket: "teskotl.appspot.com",
+  messagingSenderId: "874248669036",
+  appId: "1:874248669036:web:5c68a2e71d4b3b7ae39549",
+  measurementId: "G-X37F2EPQT8"
+};
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+const db = getDatabase();
+const moistureRef = ref(db, 'moisture');
+
+
+/////Filter Data
 const dataSet = async function getData() {
   return await axios.get('/api/data');
 }
@@ -11,19 +33,45 @@ var moistureData = []
 var temperatureData = []
 forEach()
 
+///////Buat Graph part 1
 var parentDiv = document.getElementById(`container`);
 var w = parentDiv.clientWidth || 720;
 var h = parentDiv.clientHeight || 360;
 console.log("h: " + h + "|| w: " + w)
 
-var parentDiv2 = document.getElementById(`container2`);
-var w2 = parentDiv2.clientWidth || 1920;
-var h2 = parentDiv2.clientHeight || 1080;
-console.log("h2: " + h2 + "|| w2: " + w2)
-
-const margin = { top: 40, right: 30, bottom: 30, left: 40 },
+const margin = { top: 25, right: 30, bottom: 30, left: 50 },
 width = w - margin.left - margin.right,
 height = h - margin.top - margin.bottom;
+
+createTopLeft();
+
+////TOP Right + Firebase RDB TopRight
+var finalInt
+var text = document.getElementById('moistureValue');
+var valuetext = text.innerText;
+var valueInt = parseInt(valuetext);
+var maxValue = 300;
+finalInt = (valueInt/maxValue)*100;
+move(finalInt);
+
+onValue(moistureRef, (snapshot) => {
+  const data = snapshot.val();
+  text.innerText = data;
+  finalInt = (data/maxValue)*100;
+  console.log("finalInt" + finalInt)
+  move(finalInt)
+});
+
+
+//////on Window Resize
+window.addEventListener('resize', function (event) {
+  d3.selectAll('svg').remove();
+  d3.select("#container").append("svg").remove()
+  console.log('Resive event')
+  createTopLeft()
+}, false);
+
+//////////////////////F*CKTIONS
 
 function createTopLeft(){
   data = moistureData;
@@ -110,15 +158,6 @@ function createTopLeft(){
   }
 }
 
-createTopLeft()
-
-// update()
-
-// function update() {
-//   createLinechart(moistureData)
-//   console.log(moistureData)
-// }
-
 function forEach(){
   data.data.moisture.forEach(moisture => {
     var hasil = timeParse(moisture.time)
@@ -133,10 +172,9 @@ function forEach(){
   });
 }
 
-window.addEventListener('resize', function (event) {
-  d3.selectAll('svg').remove();
-  d3.select("#container").append("svg").remove()
+function move(persen) {
+  persen = Math.ceil(persen)
+  var elem = document.getElementById("myBar");
+  elem.style.width = persen + "%";
+}
 
-  console.log('Resive event')
-  // createLinechart(moistureData)
-}, false);

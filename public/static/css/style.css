@@ -118,9 +118,9 @@ p {
 }
 
 #myBar {
-    width: 1%;
+    width: 0%;
     height: 30px;
-    background-color: orange;
+    background-color: #F2BE70;
 }
 
 #moistureValue{

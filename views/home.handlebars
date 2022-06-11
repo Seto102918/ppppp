@@ -1,3 +1,4 @@
+
 <div class="top">
 
     <div class="top-left">
@@ -7,20 +8,11 @@
 
     <div class="top-right">
         <h1 class="h2title">Soil Moisture</h1>
-        <div id="container2">
-            <h1 id="moistureValue">{{moistureInput}}</h1>
-            <div class="containerincontainer">
-                <h2 class="h2minmax"> 0 </h2>
-                <div id="myProgress">
-                    <div id="myBar"></div>
-                </div> 
-                <h2 class="h2minmax"> 300 </h2>
-            </div>
-            
-        </div>
+        {{>topright moistureInput=moistureInput}}
     </div>
-
 </div>
+
+
 
 <div class="bottom">
 
