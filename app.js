@@ -1,26 +1,13 @@
-let port = process.env.PORT || 3000
-
-console.log("process.env.PORT" + process.env.PORT)
+let port = process.env.PORT || 1234
 console.log("port" + port)
 
 const fs = require('fs')
 const admin = require('firebase-admin')
 const { Storage } = require('@google-cloud/storage')
-
 var http = require("http")
-
 const express = require('express')
 const { engine } = require('express-handlebars')
 const app = express()
-
-/////////////////////////////////////////APP///////////////////////////////////////////
-app.use(express.static('public'));
-app.engine('handlebars', engine());
-app.set('view engine', 'handlebars');
-app.set('views', './views');
-//////////////////////////////////////////FIREBASE///////////////////////////////////////////
-var serviceAccount = require("./teskotl-firebase-adminsdk-ei2g0-7f8bf6a9d4.json")
-
 const { get } = require('http')           
 const { stringify } = require('querystring')
 const { json } = require('express')
@@ -28,17 +15,90 @@ const { time } = require('console')
 const { rejects } = require('assert')
 const { resolve } = require('path')
 
+/////////////////////////////////////////APP///////////////////////////////////////////
+app.use(express.static('public'));
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './views');
+
+app.listen(port,function(error){
+    if(error){ 
+        console.log("WARNING ERROR" + error)
+    } else console.log('Server is listening to port' + port)
+})
+
+//////////////////////////////////////////FIREBASE///////////////////////////////////////////
+var serviceAccount = require("./teskotl-firebase-adminsdk-ei2g0-7f8bf6a9d4.json")
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://teskotl-default-rtdb.firebaseio.com",
   storageBucket:'gs://teskotl.appspot.com'
 });
 
+async function uploadFile(filePath,destFileName) {
+    await storage.bucket(teskotl).upload(filePath, {
+      destination: destFileName,
+    });
+    console.log(`${filePath} uploaded to teskotl`);
+}
+
+// const bucket = admin.storage.getStorage().bucket();
+// const storage = new Storage();
+
+var moistureInput
+var temperatureInput
+
+const refmoisture = admin.database().ref('moisture');
+const reftemp = admin.database().ref('suhu');
+
+refmoisture.on('value', (snapshot) => {
+    let timeHM = getTime()
+    let timeDMY = getdate()
+
+    console.log(`moisture: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
+
+    moistureInput = snapshot.val()
+
+    existsSync(timeDMY, timeHM, snapshot.val(), "moisture")
+
+    app.get('/', function (req, res) {
+        res.render('home', { 
+            moistureInput: moistureInput
+        });
+    });
+
+    app.get('/api/data', (req, res) => {
+        const data = require(`./public/static/data/${timeDMY}.json`)
+        res.json(data);
+    });
+    
+}, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
+
+
+reftemp.on('value', (snapshot) => {
+    let timeHM = getTime()
+    let timeDMY = getdate()
+
+    console.log(`temperature: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
+
+    existsSync(timeDMY, timeHM, snapshot.val(), "temperature")
+
+    app.get('/api/data', (req, res) => {
+        let timeDMY = getdate()
+        const data = require(`./public/static/data/${timeDMY}.json`)
+        console.log("api/data: " + data)
+        res.json(data);
+    });
+
+}, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
+
+
+
 function getdate(){
     const date_ob = new Date()
     let date = date_ob.getDate();
     let month = date_ob.getMonth() + 1;
-
 
         if(month == 1) month = 'Jan'
         if(month == 2) month = 'Feb'
@@ -59,112 +119,61 @@ function getdate(){
     return timeDMY
 }
 
-
 async function writejson(timeDMY,isi){
-    await fs.writeFile(`./public/static/data/${timeDMY}.json`, isi, function(err, result) {
+    var val = JSON.stringify(isi)
+    await fs.writeFile(`./public/static/data/${timeDMY}.json`, val, function(err, result) {
         if(err) console.log('error', err);
     });
 }
 
-async function uploadFile(filePath,destFileName) {
-    await storage.bucket(teskotl).upload(filePath, {
-      destination: destFileName,
-    });
-
-    console.log(`${filePath} uploaded to teskotl`);
+function getTime(){
+    const date_ob = new Date()
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    return `${hours}:${minutes}`;
 }
 
+function existsSync(timeDMY, timeHM, value, tipe){
+    var isi = {
+        value :value,
+        time : `${timeHM} | ${timeDMY}`
+    }
 
-// const bucket = admin.storage.getStorage().bucket();
-// const storage = new Storage();
-
-
-
-function ehe(){
-
-    const ref = admin.database().ref('value');
-
-    ref.once('value', (snapshot) => {
-
-        const date_ob = new Date()
-        console.log(snapshot.val());
-
-        let hours = date_ob.getHours();
-        let minutes = date_ob.getMinutes();
-        let timeHM = `${hours}:${minutes}`
-
-        let timeDMY = getdate()
-
-        console.log(timeDMY)
-        console.log(timeHM)
-
-        if (fs.existsSync(`./public/static/data/${timeDMY}.json`)){
-
-            console.log(`./public/static/data/${timeDMY}.json exist!`)
+    if (fs.existsSync(`./public/static/data/${timeDMY}.json`)){
+        console.log(`./public/static/data/${timeDMY}.json exist!`)
+        try{
             const filejson = require(`./public/static/data/${timeDMY}.json`)
-            
-            var newvalue = {
-                "value" : snapshot.val(),
-                "time" : `${timeHM} | ${timeDMY}`
+    
+            if(tipe == "moisture") {
+                filejson.moisture.push(isi)
+            }else if(tipe == "temperature"){
+                filejson.temperature.push(isi)
             }
-            filejson.push(newvalue)
-            var masok = JSON.stringify(filejson)
-            writejson(timeDMY,masok)
-            
-        }else if (!fs.existsSync(`./public/static/data/${timeDMY}.json`)){
+            writejson(timeDMY,filejson,tipe)
+        }catch (e) {console.log("Error" + e);}
+        
+    }else if (!fs.existsSync(`./public/static/data/${timeDMY}.json`)){
+        console.log(`./public/static/data/${timeDMY}.json doesnt exist, creating new!`)
 
-            console.log(`./public/static/data/${timeDMY}.json doesnt exist, creating new!`)
-
-            var isi = [{
-                "value": snapshot.val(),
-                "time": `${timeHM} | ${timeDMY}`
-            }]
-            var String = JSON.stringify(isi);
-            writejson(timeDMY,String)
-
+        var val = {
+            moisture:[],
+            temperature:[]
         }
-    }, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
 
+        try{
+            if(tipe == "moisture") {
+                val.moisture.push(isi)
+            }else if(tipe == "temperature"){
+                val.temperature.push(isi)
+            }
+            console.log(val)
+            writejson(timeDMY,val,tipe)
+        }catch (e) {console.log("Error" + e);}
+    }
 
-    // let yestimeDMY = getdate("yesterday")
-    // console.log(yestimeDMY)
-
-    app.get('/', (req, res) => {
-        res.render('home');
-    });
-    
-
-    app.get('/api/data', (req, res) => {
-
-        let timeDMY = getdate()
-        const data = require(`./public/static/data/${timeDMY}.json`)
-        res.json(data);
-
-    });
-    
-
-    // if(fs.existsSync(`./public/static/data/${yestimeDMY}.json`)){
-
-    //     app.get('/api/data2', (req, res) => {
-    //         const data2 = require(`./public/static/data/${yestimeDMY}.json`)
-    //         res.json(data2);
-    //     });
-
-    // }
-
-    console.log("End of EHE")
-    http.get("http://tes2idklg.herokuapp.com/");
-    
 }
 
 
-ehe()
-setInterval(ehe,900000)
-
-app.listen(port,function(error){
-
-    if(error){
-        console.log("WARNING ERROR" + error)
-    } else console.log('Server is listening to port' + port)
-    
-})
+setTimeout(function(){
+    http.get("http://tes2idklg.herokuapp.com/")
+},900000)

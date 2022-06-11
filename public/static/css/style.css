@@ -1,36 +1,151 @@
-/* * {
-    margin: 0;
+*{
     font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
 }
+
+:root{
+    margin: 0;
+    padding: 0;
+}
+/* *
+#0d1218
+#1a2430
+#171d29
+#4d5d6c
+
+*/
 
 body {
     overflow-x: hidden;
     width: 100%;
-    display: block;
-    background-color: #202020;
-} */
-
-html{
-    width: 100%;
     height: 100%;
+    position: relative;
+    background-color: #0d1218;
+    display: flex;
+    flex-direction: column;
+}
+
+div{
     overflow: hidden;
 }
+
+h1, h2, h3{
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    color: white;
+}
+
 p {
     font-size: 56px;
     color: white;
 }
-#container {
+
+.top{
+    height: fit-content;
     width: 100%;
-    height: 100%;
-    transform: scaleX(1.01);
-    margin: 0;
-    padding: 0;
+    padding: 2em 2em 0 2em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
-body{
-    overflow: hidden;
+.bottom{
+    height: fit-content;
     width: 100%;
-    height: 100%;
-    margin: 0;
+    padding: 2em 2em 0 2em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.top-left{
+    width: 60vw;
+    height:fit-content;
+    background-color: #1a2430;
+    margin-right: 1em;
+    border-radius: 20px;
+}
+.top-right {
+    background-color: #1a2430;
+    border-radius: 20px;
+    width: 35vw;
+}
+.bottom-left{
+    background-color: #1a2430;
+    border-radius: 20px;
+    width: 35vw;
+}
+.bottom-right{
+    background-color: #1a2430;
+    border-radius: 20px;
+    width: 35vw;
+}
+.h2title{
+    color: white;
+    font-size: 1.5rem;
+    font-family: 'Montserrat', sans-serif;
+    margin-inline-start: 2rem;
+    margin-top: 1rem;
+}
+#container {
+    height: 360px;
+    transform: scaleX(1.01);
+    margin: 1rem 2rem 2rem 2rem;
     padding: 0;
-    background-color: #465461;
+    background-color: #171d29;
+    border-radius: 20px;
+}
+.containerincontainer{
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+}
+#container2{
+    height: 80%;
+    transform: scaleX(1.01);
+    margin: 1rem 2rem 2rem 2rem;
+    padding: 0;
+    background-color: #171d29;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#myProgress {
+    width: 80%;
+    background-color: grey;
+}
+
+#myBar {
+    width: 1%;
+    height: 30px;
+    background-color: orange;
+}
+
+#moistureValue{
+    color: white;
+    font-size: 7vw;
+    font-family: 'Montserrat', sans-serif;
+
+}
+.h2minmax{
+    margin-inline: 1rem;
+}
+
+@media screen and (max-width: 900px){
+    .top{
+        flex-direction: column;
+    }
+    .top-left{
+        width: 100%;
+        margin-bottom: 1em;
+    }
+    .top-right{
+        width: 100%;
+    }
+
+    #container2{
+        min-height: 30vw;
+    }
 }
