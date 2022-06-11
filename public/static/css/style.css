@@ -91,7 +91,6 @@ p {
 #container {
     height: 360px;
     transform: scaleX(1.01);
-    margin: 1rem 2rem 2rem 2rem;
     padding: 0;
     background-color: #171d29;
     border-radius: 20px;
@@ -102,10 +101,12 @@ p {
     display: flex;
     flex-direction: row;
 }
+.containerdalem{
+    margin: 1rem 2rem 2rem 2rem;
+}
 #container2{
     height: 80%;
     transform: scaleX(1.01);
-    margin: 1rem 2rem 2rem 2rem;
     padding: 0;
     background-color: #171d29;
     border-radius: 20px;
@@ -147,8 +148,18 @@ p {
     .top-right{
         width: 100%;
     }
-
+    #container{
+        aspect-ratio: 16/9;
+        height: 30%;
+        margin: 0.5rem 1rem 1rem 1rem;
+    }
     #container2{
         min-height: 30vw;
+        margin: 0.5rem 1rem 1rem 1rem;
+    }
+    .h2title {
+        margin-inline-start: 1rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
     }
 }
