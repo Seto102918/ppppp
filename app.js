@@ -26,11 +26,11 @@ app.set('views', './views');
 
 
 //////////////////////////////////////////FIREBASE///////////////////////////////////////////
-var serviceAccount = require("./teskotl-firebase-adminsdk-ei2g0-7f8bf6a9d4.json")
+var serviceAccount = require("./projectiot-2af49-firebase-adminsdk-6yegi-c0eac48505.json")
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://teskotl-default-rtdb.firebaseio.com",
-  storageBucket:'gs://teskotl.appspot.com'
+  databaseURL: "https://projectiot-2af49-default-rtdb.asia-southeast1.firebasedatabase.app",
+  storageBucket:'gs://projectiot-2af49.appspot.com'
 });
 var bucket = admin.storage().bucket();
 

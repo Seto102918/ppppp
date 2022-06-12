@@ -7,15 +7,16 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-
 
 /////initialize DATABEZZ/////
 const firebaseConfig = {
-  apiKey: "AIzaSyAczB0gnXgHAvSIDHAvxvEEFlZdIOdhDUU",
-  authDomain: "teskotl.firebaseapp.com",
-  databaseURL: "https://teskotl-default-rtdb.firebaseio.com",
-  projectId: "teskotl",
-  storageBucket: "teskotl.appspot.com",
-  messagingSenderId: "874248669036",
-  appId: "1:874248669036:web:5c68a2e71d4b3b7ae39549",
-  measurementId: "G-X37F2EPQT8"
+  apiKey: "AIzaSyCWXmej8_QGBrQtkaETSrzsu2NocNZT3FY",
+  authDomain: "projectiot-2af49.firebaseapp.com",
+  databaseURL: "https://projectiot-2af49-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "projectiot-2af49",
+  storageBucket: "projectiot-2af49.appspot.com",
+  messagingSenderId: "176019695566",
+  appId: "1:176019695566:web:96ca2ecc715fdb9edaad9f",
+  measurementId: "G-XG0D9KWDRS"
 };
+
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
