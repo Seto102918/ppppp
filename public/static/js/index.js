@@ -23,19 +23,22 @@ const analytics = getAnalytics(app);
 const db = getDatabase();
 const moistureRef = ref(db, 'moisture');
 
-
-/////Filter Data
-const dataSet = async function getData() {
-  return await axios.get('/api/data');
-}
-var data = await dataSet()
-const timeParse = d3.timeParse("%H:%M | %d-%b-%Y")
-
 var moistureData = []
 var temperatureData = []
-forEach()
+var data
+const timeParse = d3.timeParse("%H:%M | %d-%b-%Y")
+
+
+async function ambilData(){
+  const dataSet = async function getData() {
+    return await axios.get('/api/data');
+  }
+  data = await dataSet()
+  forEach()
+}
 
 ///////Buat Graph Top Left
+await ambilData();
 createTopLeft();
 
 ////TOP Right + Firebase RDB TopRight
@@ -44,6 +47,7 @@ var text = document.getElementById('moistureValue');
 var valuetext = text.innerText;
 var valueInt = parseInt(valuetext);
 var maxValue = 300;
+
 finalInt = (valueInt/maxValue)*100;
 move(finalInt);
 
@@ -53,18 +57,30 @@ onValue(moistureRef, (snapshot) => {
   finalInt = (data/maxValue)*100;
   console.log("finalInt" + finalInt)
   move(finalInt)
+  refreshChart()
 });
-
 
 //////on Window Resize
 window.addEventListener('resize', function (event) {
-  d3.selectAll('svg').remove();
-  d3.select("#container").append("svg").remove()
+  removeChart()
   console.log('Resive event')
   createTopLeft()
 }, false);
 
+
+
 //////////////////////F*CKTIONS
+async function refreshChart(){
+  removeChart()
+  moistureData = []
+  await ambilData()
+  createTopLeft()
+}
+
+function removeChart(){
+  d3.selectAll('svg').remove();
+  d3.select("#container").append("svg").remove()
+}
 
 function createTopLeft(){
   data = moistureData;
