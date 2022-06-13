@@ -169,5 +169,6 @@ function existsSync(timeDMY, timeHM, value, tipe){
 }
 
 setTimeout(function(){
+    console.log("PING")
     http.get("http://setongeteslagi.herokuapp.com/")
 },900000)
