@@ -171,4 +171,3 @@ function existsSync(timeDMY, timeHM, value, tipe){
 setTimeout(function(){
     http.get("http://setongeteslagi.herokuapp.com/")
 },900000)
-
