@@ -65,35 +65,51 @@ p {
     min-width: 30em;
     min-height: 20em;
     width: 30%;
-    height: 50%;
+    height: fit-content;
     background-color: #1a2430;
     place-items: center;
     border-radius: 20px;
 }
+.form-div{
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
 .singIn_h1{
-    margin-top: 0.1em;
+    margin-top: 1.5rem;
     font-size: 3rem;
 }
+.singIn_h3{
+    font-size: 1rem;
+    font-weight: 300;
+}
 .form{
-    width: 50%;
+    width: 80%;
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
     align-items: center ;
-    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 label{
-    font-size: 1.25rem;
+    width: 30%;
+    height: fit-content;
+    font-size: 1rem;
     color: white;
-    margin-bottom: 0.5em;
+    margin-bottom: 0em;
 }
 input{
-    height: 4vh;
+    height: 1.2rem;
     border-radius: 20px;
     border-style: none;
     min-height: 2rem;
-    width: 100%;
-    padding-inline: 2rem;
+    width: 80%;
+    padding-left: 1rem;
+    margin-right: 0.5rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.1rem;
 }
 .top {
     height: fit-content;
@@ -106,7 +122,7 @@ input{
 #buttonSignin{
     background-color: #1a2430;
     width: 30%;
-    height: 50%;
+    min-height: 2.5rem;
     border-radius: 20px;
     color: white;
     border-color: white;
