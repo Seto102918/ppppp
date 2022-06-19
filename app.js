@@ -170,5 +170,10 @@ function existsSync(timeDMY, timeHM, value, tipe){
 
 setTimeout(function(){
     console.log("PING")
-    http.get("http://setongeteslagi.herokuapp.com/")
+    var url = "http://setongeteslagi.herokuapp.com/"
+    try{
+        http.get(url)
+    }catch(e){
+        console.log(`ERROR, Unable to get ${url}`)
+    }
 },900000)
