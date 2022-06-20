@@ -50,7 +50,7 @@ p {
     font-size: 56px;
     color: var(--warna-text);
 }
-
+/*//////////////////////////////////////////*/
 .authContainer {
     display: grid;
     place-items: center;
@@ -65,6 +65,7 @@ p {
    
     padding: 0;
 }
+
 #backgroundAuth{
     z-index: 1;
     background: url("./content/background.jpg");
@@ -73,6 +74,7 @@ p {
     -webkit-filter: blur(1px) brightness(50%);
     opacity: 0.5;
 }
+
 .singInContainer{
     display: grid;
     min-width: 50vw;
@@ -84,11 +86,13 @@ p {
     border-radius: 20px;
     box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.287);
 }
+
 .title-text{
     height: fit-content;
     margin-bottom: 2em;
     margin-top: 1em;
 }
+
 .form-div{
     width: 100%;
     min-height: 3rem;
@@ -97,19 +101,23 @@ p {
     justify-content: center;
     align-items: center;
 }
+
 .singIn_h1{
     font-size: 8vh;
 }
+
 .singIn_h3{
     font-size: 1.25rem;
     font-weight: 300;
 }
+
 #form-h3{
     font-weight: 500;
     width: 100%;
     text-align: center;
     margin-bottom: 1rem;
 }
+
 .form{
     width: 80%;
     min-height: 20vh;
@@ -117,6 +125,7 @@ p {
     align-items: center;
     margin-bottom: 2em;
 }
+
 label{
     width: 30%;
     height: fit-content;
@@ -124,6 +133,7 @@ label{
     color: var(--warna-text);
     margin-bottom: 0em;
 }
+
 input{
     border-radius: 20px;
     border-style: none;
@@ -135,15 +145,8 @@ input{
     margin-bottom: 0.1rem;
     font-size: medium;
 }
-.top {
-    height: fit-content;
-    width: 100%;
-    padding: 2em 2em 0 2em;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-#buttonSignin{
+
+#buttonSignin {
     background-color: var(--warna-secondary);
     width: 30%;
     min-height: 2.5rem;
@@ -152,42 +155,54 @@ input{
     border-color: var(--warna-text);
     margin-bottom: 1.5rem;
 }
+
+/*//////////////////////////////////////////*/
+.top {
+    height: fit-content;
+    width: 100%;
+    padding: 2em 2em 2em 2em;   
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+
 .bottom {
     height: fit-content;
     width: 100%;
-    padding: 2em 2em 0 2em;
+    padding: 0em 2em 2em 2em;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-
+.top > div ,
+.bottom > div {
+    opacity: 0;
+    transform: translateY(10%);
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    background-color: var(--warna-secondary);
+}
+/*//////////////////////////////////////////*/
 .top-left {
     width: 60vw;
     height: fit-content;
-    background-color: var(--warna-secondary);
     margin-right: 1em;
-    border-radius: 20px;
-    opacity: 0;
 }
 
 .top-right {
-    background-color: var(--warna-secondary);
-    border-radius: 20px;
     width: 35vw;
 }
 
 .bottom-left {
-    background-color: var(--warna-secondary);
-    border-radius: 20px;
     width: 35vw;
 }
 
 .bottom-right {
-    background-color:var(--warna-secondary);
-    border-radius: 20px;
     width: 35vw;
 }
 
+/*//////////////////////////////////////////*/
 .h2title {
     color: var(--warna-text);
     font-size: 1.5rem;
@@ -250,9 +265,11 @@ input{
 .h2minmax {
     margin-inline: 1rem;
 }
+
 #waterPumpButton{
     width: 100%;
 }
+
 @media screen and (max-width: 900px) {
     .top {
         padding: 1em 1em 0 1em;

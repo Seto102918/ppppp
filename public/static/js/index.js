@@ -23,7 +23,11 @@ const botDiv = document.getElementById("bottom");
 const conDiv = document.getElementById("container");
 const background = document.getElementById("backgroundAuth");
 
-const topLeft = document.getElementsByClassName("top-left")
+const topLeft = document.getElementsByClassName("top-left");
+const topRight= document.getElementsByClassName("top-right");
+const botLeft = document.getElementsByClassName("bottom-left");
+const botRight = document.getElementsByClassName("bottom-right");
+
 
 conDiv.style.display = "none";
 
@@ -41,19 +45,23 @@ singInButton.addEventListener("click",() => {
     const user = userCredential.user;
     authDiv.style.display = "none";
     conDiv.style.display = "block";
-    gsap.to(background,{opacity: 0, duration: 0.5, ease: 'back'})
     background.display = "none";
     loginAnimation();
   })
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
-    alert("Wrong Email / Password.");
   });
 })
 
 function loginAnimation(){
-  gsap.to(topLeft,{opacity: 1, duration: 0.5, ease: 'back'})
+  console.log("animation start")
+  var tl = gsap.timeline();
+  tl.to(background,{opacity: 0, duration: 0.5, ease: 'back'})
+    .to(topLeft,{opacity: 1, y: -0 , duration: 0.5, ease: 'back'})
+    .to(topRight,{opacity: 1, y: -0, duration: 0.5, ease: 'back'})
+    .to(botLeft,{opacity: 1, y: -0, duration: 0.5, ease: 'back'})
+    .to(botRight,{opacity: 1, y: -0, duration: 0.5, ease: 'back'});
 }
 
 
