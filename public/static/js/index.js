@@ -21,6 +21,9 @@ const authDiv = document.getElementById("authDiv");
 const topDiv = document.getElementById("top");
 const botDiv = document.getElementById("bottom");
 const conDiv = document.getElementById("container");
+const background = document.getElementById("backgroundAuth");
+
+const topLeft = document.getElementsByClassName("top-left")
 
 conDiv.style.display = "none";
 
@@ -38,6 +41,9 @@ singInButton.addEventListener("click",() => {
     const user = userCredential.user;
     authDiv.style.display = "none";
     conDiv.style.display = "block";
+    gsap.to(background,{opacity: 0, duration: 0.5, ease: 'back'})
+    background.display = "none";
+    loginAnimation();
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -46,7 +52,9 @@ singInButton.addEventListener("click",() => {
   });
 })
 
-
+function loginAnimation(){
+  gsap.to(topLeft,{opacity: 1, duration: 0.5, ease: 'back'})
+}
 
 
 const db = getDatabase();

@@ -6,18 +6,19 @@
 :root {
     margin: 0;
     padding: 0;
-    --warna-primary:#0d1218;
-    --warna-secondary:#1a2430;
-    --warna-third:#171d29;
+    --warna-primary:#ffeadd;
+    --warna-secondary:#8d5b3e;
+    --warna-third:#8d5b3e;
     --warna-text:white;
     --warna-bar: #F2BE70;
 }
 
 /* *
-#0d1218
-#1a2430
-#171d29
-#4d5d6c
+    --warna-primary:#0d1218;
+    --warna-secondary:#1a2430;
+    --warna-third:#171d29;
+    --warna-text:white;
+    --warna-bar: #F2BE70;
 
 */
 
@@ -58,11 +59,19 @@ p {
     z-index: 100;
     top: 0;
     left: 0;
-    background-color: var(--warna-primary);
     width: 100%;
     height: 100vh;
     margin: 0;
+   
     padding: 0;
+}
+#backgroundAuth{
+    z-index: 1;
+    background: url("./content/background.jpg");
+    background-size: cover;
+    filter: blur(1px);
+    -webkit-filter: blur(1px) brightness(50%);
+    opacity: 0.5;
 }
 .singInContainer{
     display: grid;
@@ -73,6 +82,7 @@ p {
     background-color: var(--warna-secondary);
     place-items: center;
     border-radius: 20px;
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.287);
 }
 .title-text{
     height: fit-content;
@@ -157,6 +167,7 @@ input{
     background-color: var(--warna-secondary);
     margin-right: 1em;
     border-radius: 20px;
+    opacity: 0;
 }
 
 .top-right {
