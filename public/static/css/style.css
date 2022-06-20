@@ -6,7 +6,11 @@
 :root {
     margin: 0;
     padding: 0;
-    --warna-tai:#0d1218;
+    --warna-primary:#0d1218;
+    --warna-secondary:#1a2430;
+    --warna-third:#171d29;
+    --warna-text:white;
+    --warna-bar: #F2BE70;
 }
 
 /* *
@@ -22,7 +26,7 @@ body {
     width: 100%;
     height: 100%;
     position: relative;
-    background-color: #0d1218;
+    background-color: var(--warna-primary);
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -38,12 +42,12 @@ h2,
 h3 {
     margin-block-start: 0em;
     margin-block-end: 0em;
-    color: white;
+    color: var(--warna-text);
 }
 
 p {
     font-size: 56px;
-    color: white;
+    color: var(--warna-text);
 }
 
 .authContainer {
@@ -54,62 +58,68 @@ p {
     z-index: 100;
     top: 0;
     left: 0;
-    background-color: #0d1218;
-    width: 100vw;
+    background-color: var(--warna-primary);
+    width: 100%;
     height: 100vh;
     margin: 0;
     padding: 0;
 }
 .singInContainer{
     display: grid;
-    min-width: 30em;
-    min-height: 20em;
+    min-width: 50vh;
+    min-height: 45vh;
     width: 30%;
     height: fit-content;
-    background-color: #1a2430;
+    background-color: var(--warna-secondary);
     place-items: center;
     border-radius: 20px;
 }
+.title-text{
+    height: fit-content;
+}
 .form-div{
-    width: 90%;
+    width: 100%;
+    min-height: 3rem;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 .singIn_h1{
-    margin-top: 1.5rem;
-    font-size: 3rem;
+    font-size: 3.5rem;
 }
 .singIn_h3{
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 300;
+}
+#form-h3{
+    font-weight: 500;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1rem;
 }
 .form{
     width: 80%;
-    display: flex;
-    flex-direction: column;
-    align-items: center ;
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
+    height: 20vh;
+    align-items: center;
 }
 label{
     width: 30%;
     height: fit-content;
-    font-size: 1rem;
-    color: white;
+    font-size: 1.2rem;
+    color: var(--warna-text);
     margin-bottom: 0em;
 }
 input{
-    height: 1.2rem;
     border-radius: 20px;
     border-style: none;
-    min-height: 2rem;
+    min-height: 2.5rem;
     width: 80%;
     padding-left: 1rem;
     margin-right: 0.5rem;
     margin-top: 0.2rem;
     margin-bottom: 0.1rem;
+    font-size: medium;
 }
 .top {
     height: fit-content;
@@ -124,8 +134,8 @@ input{
     width: 30%;
     min-height: 2.5rem;
     border-radius: 20px;
-    color: white;
-    border-color: white;
+    color: var(--warna-text);
+    border-color: var(--warna-text);
     margin-bottom: 1.5rem;
 }
 .bottom {
@@ -164,7 +174,7 @@ input{
 }
 
 .h2title {
-    color: white;
+    color: var(--warna-text);
     font-size: 1.5rem;
     font-family: 'Montserrat', sans-serif;
     margin-inline-start: 2rem;
@@ -175,6 +185,7 @@ input{
     height: 360px;
     transform: scaleX(1.01);
     padding: 0;
+    display: block;
     background-color: #171d29;
     border-radius: 20px;
 }
@@ -215,7 +226,7 @@ input{
 }
 
 #moistureValue {
-    color: white;
+    color: var(--warna-text);
     font-size: 7vw;
     font-family: 'Montserrat', sans-serif;
 
@@ -224,7 +235,9 @@ input{
 .h2minmax {
     margin-inline: 1rem;
 }
-
+#waterPumpButton{
+    width: 100%;
+}
 @media screen and (max-width: 900px) {
     .top {
         padding: 1em 1em 0 1em;

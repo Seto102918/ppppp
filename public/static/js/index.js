@@ -3,7 +3,7 @@ import axios from 'https://cdn.skypack.dev/axios';
 import { getDatabase, ref, onValue} from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-database.min.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-analytics.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-auth.min.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut  } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-auth.min.js";
 
 /////initialize DATABEZZ/////
 const firebaseConfig = {
@@ -17,22 +17,35 @@ const firebaseConfig = {
   measurementId: "G-XG0D9KWDRS"
 };
 
+const authDiv = document.getElementById("authDiv");
+const topDiv = document.getElementById("top");
+const botDiv = document.getElementById("bottom");
+const conDiv = document.getElementById("container");
+
+conDiv.style.display = "none";
+
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const auth = getAuth();
 
-///////////////////authentication
-// const auth = getAuth();
-// createUserWithEmailAndPassword(auth, email, password)
-//   .then((userCredential) => {
-//     // Signed in 
-//     const user = userCredential.user;
-//     // ...
-//   })
-//   .catch((error) => {
-//     const errorCode = error.code;
-//     const errorMessage = error.message;
-//     // ..
-//   });
+const singInButton = document.getElementById("buttonSignin");
+singInButton.addEventListener("click",() => {
+  var emailInput = document.getElementById("emailInput").value;
+  var passwordInput = document.getElementById("passwordInput").value;
+
+  signInWithEmailAndPassword(auth, emailInput, passwordInput)
+  .then((userCredential) => {
+    const user = userCredential.user;
+    authDiv.style.display = "none";
+    conDiv.style.display = "block";
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    alert("Wrong Email / Password.");
+  });
+})
+
 
 
 
@@ -101,7 +114,7 @@ function removeChart(){
 function createTopLeft(){
   data = moistureData;
   
-  var parentDiv = document.getElementById(`container`);
+  var parentDiv = document.getElementById(`containersize`);
   var w = parentDiv.clientWidth || 720;
   var h = parentDiv.clientHeight || 360;
   console.log("h: " + h + "|| w: " + w)

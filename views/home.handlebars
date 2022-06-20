@@ -1,29 +1,30 @@
 {{>auth}}
-<div class="top">
-
+<div class="top" id="top">
     <div class="top-left">
         <h1 class="h2title">Soil Moisture Today</h1>
-        <div id="container" class="containerdalem"></div>
+        <div class="containerdalem" id="containersize">
+            <div id="container"></div>
+        </div>
+        
     </div>
 
     <div class="top-right">
-        <h1 class="h2title">Soil Moisture</h1>
+        <h1 class="h2title"> Realtime Soil Moisture</h1>
         {{>topright moistureInput=moistureInput}}
     </div>
 </div>
 
 
-
-<div class="bottom">
-
+<div class="bottom" id="bottom">
     <div class="bottom-left">
         <h1 class="h2title">Water Control</h1>
-        <div id="container3" class="containerdalem"></div>
+        <div id="container3" class="containerdalem">
+            <button id="waterPumpButton">Run Water Pump</button>
+        </div>
     </div>
 
     <div class="bottom-right">
         <h1 class="h2title">Belom tau</h1>
         <div id="container4" class="containerdalem"></div>
     </div>
-
 </div>
