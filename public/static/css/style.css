@@ -66,9 +66,9 @@ p {
 }
 .singInContainer{
     display: grid;
-    min-width: 50vh;
+    min-width: 50vw;
     min-height: 45vh;
-    width: 30%;
+    width: fit-content;
     height: fit-content;
     background-color: var(--warna-secondary);
     place-items: center;
@@ -76,6 +76,8 @@ p {
 }
 .title-text{
     height: fit-content;
+    margin-bottom: 2em;
+    margin-top: 1em;
 }
 .form-div{
     width: 100%;
@@ -86,7 +88,7 @@ p {
     align-items: center;
 }
 .singIn_h1{
-    font-size: 3.5rem;
+    font-size: 8vh;
 }
 .singIn_h3{
     font-size: 1.25rem;
@@ -100,8 +102,10 @@ p {
 }
 .form{
     width: 80%;
-    height: 20vh;
+    min-height: 20vh;
+    height: fit-content;
     align-items: center;
+    margin-bottom: 2em;
 }
 label{
     width: 30%;
