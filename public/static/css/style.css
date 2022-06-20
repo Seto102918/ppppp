@@ -6,9 +6,9 @@
 :root {
     margin: 0;
     padding: 0;
-    --warna-primary:#ffeadd;
-    --warna-secondary:#8d5b3e;
-    --warna-third:#8d5b3e;
+    --warna-primary:#121212;
+    --warna-secondary:#181818;
+    --warna-third:#1ed75f;
     --warna-text:white;
     --warna-bar: #F2BE70;
 }
@@ -32,10 +32,6 @@ body {
     flex-direction: column;
     margin: 0;
     padding: 0;
-}
-
-div {
-    overflow: hidden;
 }
 
 h1,
@@ -62,35 +58,36 @@ p {
     width: 100%;
     height: 100vh;
     margin: 0;
-   
     padding: 0;
 }
 
 #backgroundAuth{
     z-index: 1;
     background: url("./content/background.jpg");
+    background-color:var(--warna-primary);
     background-size: cover;
-    filter: blur(1px);
-    -webkit-filter: blur(1px) brightness(50%);
+    filter: blur(5px);
+    -webkit-filter: blur(5px) brightness(50%);
     opacity: 0.5;
 }
 
 .singInContainer{
     display: grid;
-    min-width: 50vw;
+    min-width: fit-content;
     min-height: 45vh;
-    width: fit-content;
+    width: 40vw;
     height: fit-content;
     background-color: var(--warna-secondary);
     place-items: center;
     border-radius: 20px;
-    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.287);
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
 }
 
 .title-text{
     height: fit-content;
     margin-bottom: 2em;
     margin-top: 1em;
+    margin-inline: 2em;
 }
 
 .form-div{
@@ -103,7 +100,7 @@ p {
 }
 
 .singIn_h1{
-    font-size: 8vh;
+    font-size: 6vh;
 }
 
 .singIn_h3{
@@ -120,10 +117,10 @@ p {
 
 .form{
     width: 80%;
+    max-width: 30rem;
     min-height: 20vh;
     height: fit-content;
     align-items: center;
-    margin-bottom: 2em;
 }
 
 label{
@@ -149,11 +146,22 @@ input{
 #buttonSignin {
     background-color: var(--warna-secondary);
     width: 30%;
-    min-height: 2.5rem;
+    min-height: 3.5rem;
     border-radius: 20px;
     color: var(--warna-text);
-    border-color: var(--warna-text);
     margin-bottom: 1.5rem;
+    border-style: solid;
+    border-color: var(--warna-text);
+    transition: 0.2s;
+    font-weight: 500;
+    font-size: 1.25rem;
+    transition: 0.25s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+#buttonSignin:hover{
+    border-color: var(--warna-third);
+    color: black;
+    background-color: var(--warna-third);
 }
 
 /*//////////////////////////////////////////*/
@@ -175,6 +183,7 @@ input{
     flex-direction: row;
     justify-content: space-between;
 }
+
 .top > div ,
 .bottom > div {
     opacity: 0;
@@ -216,7 +225,8 @@ input{
     transform: scaleX(1.01);
     padding: 0;
     display: block;
-    background-color: var(--warna-third);
+    overflow: visible;
+    background-color: var(--warna-secondary);
     border-radius: 20px;
 }
 
@@ -231,12 +241,11 @@ input{
 .containerdalem {
     margin: 1rem 2rem 2rem 2rem;
 }
-
+/*//////////////////////////////////////////*/
 #container2 {
     height: 80%;
     transform: scaleX(1.01);
     padding: 0;
-    background-color: var(--warna-third);
     border-radius: 20px;
     display: flex;
     flex-direction: column;
@@ -265,9 +274,33 @@ input{
 .h2minmax {
     margin-inline: 1rem;
 }
+/*//////////////////////////////////////////*/
 
 #waterPumpButton{
-    width: 100%;
+    background-color: var(--warna-secondary);
+    width: 40%;
+    min-height: 3rem;
+    border-radius: 20px;
+    color: var(--warna-text);
+    border-color: var(--warna-text);
+    margin-bottom: 1.5rem;
+    border-width: 3px;
+    border-style:solid;
+    transition: 0.2s;
+    font-weight: 500;
+    font-size: medium;
+}
+#waterPumpButton:hover{
+    background-color: var(--warna-third);
+    color: black;
+    border-color: var(--warna-third);
+}
+.tooltip{
+    position: absolute;
+    z-index: 150;
+    height:fit-content ;
+    opacity: 1;
+    overflow: visible;
 }
 
 @media screen and (max-width: 900px) {
@@ -289,6 +322,7 @@ input{
         aspect-ratio: 16/9;
         height: 30%;
         margin: 0.5rem 1rem 1rem 1rem;
+        overflow: visibleto;
     }
 
     #container svg {
