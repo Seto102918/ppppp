@@ -79,7 +79,7 @@ refmoisture.on('value', (snapshot) => {
 app.get('/', function (req, res) {
     res.render('home',{
         moistureInput: moistureInput
-    });
+    });``
 });
 
 app.listen(port,function(error){
