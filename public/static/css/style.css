@@ -134,7 +134,7 @@ input{
     justify-content: space-between;
 }
 #buttonSignin{
-    background-color: #1a2430;
+    background-color: var(--warna-secondary);
     width: 30%;
     min-height: 2.5rem;
     border-radius: 20px;
@@ -154,25 +154,25 @@ input{
 .top-left {
     width: 60vw;
     height: fit-content;
-    background-color: #1a2430;
+    background-color: var(--warna-secondary);
     margin-right: 1em;
     border-radius: 20px;
 }
 
 .top-right {
-    background-color: #1a2430;
+    background-color: var(--warna-secondary);
     border-radius: 20px;
     width: 35vw;
 }
 
 .bottom-left {
-    background-color: #1a2430;
+    background-color: var(--warna-secondary);
     border-radius: 20px;
     width: 35vw;
 }
 
 .bottom-right {
-    background-color: #1a2430;
+    background-color:var(--warna-secondary);
     border-radius: 20px;
     width: 35vw;
 }
@@ -190,7 +190,7 @@ input{
     transform: scaleX(1.01);
     padding: 0;
     display: block;
-    background-color: #171d29;
+    background-color: var(--warna-third);
     border-radius: 20px;
 }
 
@@ -210,7 +210,7 @@ input{
     height: 80%;
     transform: scaleX(1.01);
     padding: 0;
-    background-color: #171d29;
+    background-color: var(--warna-third);
     border-radius: 20px;
     display: flex;
     flex-direction: column;
