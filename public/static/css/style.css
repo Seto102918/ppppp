@@ -34,6 +34,10 @@ body {
     padding: 0;
 }
 
+button{
+    cursor:pointer;
+}
+
 h1,
 h2,
 h3 {
@@ -149,6 +153,7 @@ input{
     min-height: 3.5rem;
     border-radius: 20px;
     color: var(--warna-text);
+    margin-top: 2rem;
     margin-bottom: 1.5rem;
     border-style: solid;
     border-color: var(--warna-text);
@@ -287,7 +292,7 @@ input{
     border-width: 3px;
     border-style:solid;
     transition: 0.2s;
-    font-weight: 500;
+    font-weight: 600;
     font-size: medium;
 }
 #waterPumpButton:hover{

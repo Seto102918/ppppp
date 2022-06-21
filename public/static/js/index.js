@@ -162,20 +162,20 @@ function createTopLeft(){
     .attr("stroke-width", 3)
     .attr("d", d3.line()
       .x(d => x(d.time))
-        .y(d => y(d.value))
+      .y(d => y(d.value))
     )
   
   const Tooltip = d3.select("#container")
       .append("div")
       .style("opacity", 0)
       .attr("class", "tooltip")
-      .style("background-color", "white")
+      .style("background-color", "#1ed75f")
       .style("border", "solid")
-      .style("border-width", "2px")
+      .style("font-weight","600")
+      .style("border-width", "0px")
       .style("border-radius", "5px")
       .style("padding", "5px")
 
-      // Three function that change the tooltip when user hover / move / leave a cell
       const mouseover = function(event,d) {
         Tooltip
           .style("opacity", 1)
@@ -201,9 +201,7 @@ function createTopLeft(){
         .attr("cx", d => x(d.time))
         .attr("cy", d => y(d.value))
         .attr("r", 8)
-        .attr("stroke", "#69b3a2")
-        .attr("stroke-width", 3)
-        .attr("fill", "white")
+        .attr("fill", "#1ed75f")  
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
