@@ -146,24 +146,37 @@ function createTopLeft(){
   var x = d3.scaleTime()
     .domain(d3.extent(data, function (d){return d.time;}))
     .range([0, width]);
-  svg.append("g")
+  // svg.append("g")
+  //   .attr("transform", "translate(0," + height + ")")
+  //   .call(d3.axisBottom(x));
+
+  var xAxis = svg.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x));
 
+  
   var y = d3.scaleLinear()
     .domain([0, d3.max(data, function (d){return + d.value;})])
     .range([height, 0]);
   svg.append("g")
     .call(d3.axisLeft(y));
+  
+  var clip = svg.append("defs").append("svg:clipPath")
+    .attr("id", "clip")
+    .append("svg:rect")
+    .attr("width", width )
+    .attr("height", height )
+    .attr("x", 0)
+    .attr("y", 0);
 
-  svg.append("path")
-    .datum(data)
-    .attr("stroke", "white")
-    .attr("stroke-width", 3)
-    .attr("d", d3.line()
-      .x(d => x(d.time))
-      .y(d => y(d.value))
-    )
+  var brush = d3.brushX()
+      .extent( [ [0,0], [width,height] ] )
+      // .on("end", updateChart)
+  
+  var scatter = svg.append('g')
+    .attr("clip-path", "url(#clip)")
+
+  
   
   const Tooltip = d3.select("#container")
       .append("div")
@@ -190,21 +203,66 @@ function createTopLeft(){
         Tooltip
           .style("opacity", 0)
       }
+    
+  scatter
+    .append("path")
+    .datum(data)
+    .attr("stroke", "white")
+    .attr("fill", "none")
+    .attr("stroke-width", 3)
+    .attr("d", d3.line()
+      .x(d => x(d.time))
+      .y(d => y(d.value))
+    )  
 
+  scatter
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("cx", function (d) { return x(d.time); } )
+      .attr("cy", function (d) { return y(d.value); } )
+      .attr("r", 8)
+      .style("opacity", 1)
+      .attr("fill", "#1ed75f")
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
+      
+  
+  // scatter
+  //   .append("g")
+  //     .attr("class", "brush")
+  //     .call(brush);
 
-  svg
-      .append("g")
-      .selectAll("dot")
-      .data(data)
-      .join("circle")
-        .attr("class", "myCircle")
-        .attr("cx", d => x(d.time))
-        .attr("cy", d => y(d.value))
-        .attr("r", 8)
-        .attr("fill", "#1ed75f")  
-        .on("mouseover", mouseover)
-        .on("mousemove", mousemove)
-        .on("mouseleave", mouseleave)
+  var idleTimeout
+  function idled() { idleTimeout = null; }
+
+  function updateChart(event) {
+    var extent = event.selection
+    if(!extent){
+      if (!idleTimeout) return idleTimeout = setTimeout(idled, 350);
+      x.domain(d3.extent(data, function (d){return d.time;}));
+    }else{
+      x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
+      scatter.select(".brush").call(brush.move, null)
+    }
+
+    xAxis.transition().duration(1000).call(d3.axisBottom(x))
+    scatter
+      .selectAll("circle")
+      .transition().duration(1000)
+      .attr("cx", function (d) { return x(d.time); } )
+      .attr("cy", function (d) { return y(d.value); } )
+
+    // scatter
+    //   .selectAll("line")
+    //   .transition().duration(1000)
+    //   .attr("d", d3.line()
+    //   .x(d => x(d.time))
+    //   .y(d => y(d.value))
+    //   )  
+    }
 
     
 }
