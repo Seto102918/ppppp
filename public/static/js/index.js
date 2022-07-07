@@ -1,9 +1,16 @@
 import * as d3 from "https://cdn.skypack.dev/d3@7";
 import axios from 'https://cdn.skypack.dev/axios';
-import { getDatabase, ref, onValue} from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-database.min.js";
+import { getDatabase, ref, onValue, set} from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-database.min.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-analytics.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut  } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-auth.min.js";
+
+const socket = io("http://localhost:8080")
+socket.on("connect", () => {
+  console.log("socket ID: " + socket.id)
+  socket.on("dataUpdate", datanya => {
+    ////
+  })
+})
 
 /////initialize DATABEZZ/////
 const firebaseConfig = {
@@ -17,23 +24,20 @@ const firebaseConfig = {
   measurementId: "G-XG0D9KWDRS"
 };
 
+initializeApp(firebaseConfig);
+const auth = getAuth();
+
 const authDiv = document.getElementById("authDiv");
-const topDiv = document.getElementById("top");
-const botDiv = document.getElementById("bottom");
 const conDiv = document.getElementById("container");
 const background = document.getElementById("backgroundAuth");
 const topLeft = document.getElementsByClassName("top-left");
 const topRight= document.getElementsByClassName("top-right");
 const botLeft = document.getElementsByClassName("bottom-left");
-const botRight = document.getElementsByClassName("bottom-right");
-var parentDiv = document.getElementById(`containersize`);
+const parentDiv = document.getElementById(`containersize`);
+const right = document.getElementById('right');
 var w,h, width, height;
 
-
 conDiv.style.display = "none";
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth();
 
 const singInButton = document.getElementById("buttonSignin");
 singInButton.addEventListener("click",() => {
@@ -49,9 +53,7 @@ singInButton.addEventListener("click",() => {
     loginAnimation();
   })
   .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    alert("Wrong Email or Password")
+    alert(`${error.code} : ${error.message}`)
   });
 })
 
@@ -60,25 +62,23 @@ function loginAnimation(){
   tl.to(background,{opacity: 0, duration: 0.5, ease: 'back', onComplete: () => {background.style.display = "none";}})
     .to(topLeft,{opacity: 1, y: 0 , duration: 0.35, ease: 'back'})
     .to(topRight,{opacity: 1, y: 0, duration: 0.35, ease: 'back'})
-    .to(botLeft,{opacity: 1, y: 0, duration: 0.35, ease: 'back'})
-    .to(botRight,{opacity: 1, y: 0, duration: 0.35, ease: 'back'});
+    .to(botLeft,{opacity: 1, y: 0, duration: 0.35, ease: 'back'});
 }
-
 
 const db = getDatabase();
 const moistureRef = ref(db, 'moisture');
-
-var moistureData = [];
-var temperatureData = [];
-var data;
 const timeParse = d3.timeParse("%H:%M | %d-%b-%Y");
 
+var moistureData = [];
+var data;
+
 async function ambilData(){
-  const dataSet = async function getData() {
-    return await axios.get('/api/data');
-  }
-  data = await dataSet()
-  forEach()
+  data =  await axios.get('/api/moistureData');
+  data.data.moisture.forEach(moisture => {
+    var hasil = timeParse(moisture.time)
+    var obj = {"value": moisture.value,"time": hasil }
+    moistureData.push(obj)
+  });
 }
 
 ///////Buat Graph Top Left
@@ -90,7 +90,7 @@ var finalInt
 var text = document.getElementById('moistureValue');
 var valuetext = text.innerText;
 var valueInt = parseInt(valuetext);
-var maxValue = 300;
+var maxValue = 5000;
 
 finalInt = (valueInt/maxValue)*100;
 move(finalInt);
@@ -100,6 +100,7 @@ onValue(moistureRef, (snapshot) => {
   text.innerText = data;
   finalInt = (data/maxValue)*100;
   console.log("finalInt" + finalInt)
+
   move(finalInt)
   refreshChart()
 });
@@ -230,10 +231,6 @@ function createTopLeft(){
       .on("mouseleave", mouseleave)
       
   
-  // scatter
-  //   .append("g")
-  //     .attr("class", "brush")
-  //     .call(brush);
 
   var idleTimeout
   function idled() { idleTimeout = null; }
@@ -255,30 +252,9 @@ function createTopLeft(){
       .attr("cx", function (d) { return x(d.time); } )
       .attr("cy", function (d) { return y(d.value); } )
 
-    // scatter
-    //   .selectAll("line")
-    //   .transition().duration(1000)
-    //   .attr("d", d3.line()
-    //   .x(d => x(d.time))
-    //   .y(d => y(d.value))
-    //   )  
     }
 
     
-}
-
-function forEach(){
-  data.data.moisture.forEach(moisture => {
-    var hasil = timeParse(moisture.time)
-    var obj = {"value": moisture.value,"time": hasil }
-    moistureData.push(obj)
-  });
-
-  data.data.temperature.forEach(temperature => {
-    var hasil = timeParse(temperature.time)
-    var obj = {"value": temperature.value,"time": hasil }
-    temperatureData.push(obj)
-  });
 }
 
 function move(persen) {
@@ -287,3 +263,34 @@ function move(persen) {
   gsap.to(elem,{width: `${persen}%`, duration: 1, ease: 'back'})
 }
 
+
+var state;
+const pumpRef = ref(db, 'Waterpump');
+
+onValue(pumpRef, (snapshot) => {
+  state = snapshot.val();
+  if (state == 0){
+    button.style.backgroundColor = '#1ed75f';
+  }else if(state == 1){
+    button.style.backgroundColor = '#121212';
+  }else{
+    console.log("Error Pump state != 0 / 1")
+  }
+});
+
+const button = document.getElementById('waterPumpButton');
+
+button.addEventListener('click', () => {
+
+  if (state == 0){
+    set(pumpRef, 1);
+    button.style.backgroundColor = '#1ed75f';
+  }else if(state == 1){
+    set(pumpRef, 0);
+    button.style.backgroundColor = '#121212';
+  }else{
+    console.log("Error Pump state != 0 / 1")
+  }
+
+});
+  
