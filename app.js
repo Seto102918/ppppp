@@ -42,17 +42,25 @@ app.set('views', './views');
 
 
 //////////////////////////////////////////FIREBASE///////////////////////////////////////////
-var serviceAccount = require("./projectiot-2af49-firebase-adminsdk-6yegi-c0eac48505.json")
+// var serviceAccount = require("./projectiot-2af49-firebase-adminsdk-6yegi-c0eac48505.json")
+var serviceAccount = require("./garden1-53f71-firebase-adminsdk-th80d-0d6e9d4558.json");
+const { storage } = require('firebase-admin');
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: "https://projectiot-2af49-default-rtdb.asia-southeast1.firebasedatabase.app",
+//   storageBucket:'gs://projectiot-2af49.appspot.com'
+// });
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://projectiot-2af49-default-rtdb.asia-southeast1.firebasedatabase.app",
-  storageBucket:'gs://projectiot-2af49.appspot.com'
+  databaseURL: "https://garden1-53f71-default-rtdb.firebaseio.com",
+  storageBucket: "gs://garden1-53f71.appspot.com"
 });
 var bucket = admin.storage().bucket();
 
 var moistureInput, moistureInput2
-const refmoisture = admin.database().ref('moisture');
-const refmoisture2 = admin.database().ref('moisture2');
+const refmoisture = admin.database().ref('plant1/humidity1');
+const refmoisture2 = admin.database().ref('plant2/humidity');
 
 refmoisture.on('value', (snapshot) => {
     let timeHM = getTime()

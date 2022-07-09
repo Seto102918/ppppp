@@ -13,15 +13,24 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut  } fro
 // })
 
 /////initialize DATABEZZ/////
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCWXmej8_QGBrQtkaETSrzsu2NocNZT3FY",
+//   authDomain: "projectiot-2af49.firebaseapp.com",
+//   databaseURL: "https://projectiot-2af49-default-rtdb.asia-southeast1.firebasedatabase.app",
+//   projectId: "projectiot-2af49",
+//   storageBucket: "projectiot-2af49.appspot.com",
+//   messagingSenderId: "176019695566",
+//   appId: "1:176019695566:web:96ca2ecc715fdb9edaad9f",
+//   measurementId: "G-XG0D9KWDRS"
+// };
 const firebaseConfig = {
-  apiKey: "AIzaSyCWXmej8_QGBrQtkaETSrzsu2NocNZT3FY",
-  authDomain: "projectiot-2af49.firebaseapp.com",
-  databaseURL: "https://projectiot-2af49-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "projectiot-2af49",
-  storageBucket: "projectiot-2af49.appspot.com",
-  messagingSenderId: "176019695566",
-  appId: "1:176019695566:web:96ca2ecc715fdb9edaad9f",
-  measurementId: "G-XG0D9KWDRS"
+  apiKey: "AIzaSyB-Yzm45NRR3TaLLE6bNqAo2Yllu1HdTLE",
+  authDomain: "garden1-53f71.firebaseapp.com",
+  databaseURL: "https://garden1-53f71-default-rtdb.firebaseio.com",
+  projectId: "garden1-53f71",
+  storageBucket: "garden1-53f71.appspot.com",
+  messagingSenderId: "733557734745",
+  appId: "1:733557734745:web:a24c0912247181623e6048"
 };
 
 initializeApp(firebaseConfig);
@@ -127,8 +136,8 @@ move(finalInt, "myBar2");
 
 //////////
 const db = getDatabase();
-const moistureRef = ref(db, 'moisture');
-const moisture2Ref = ref(db, 'moisture2');
+const moistureRef = ref(db, 'plant1/humidity1');
+const moisture2Ref = ref(db, 'plant2/humidity');
 
 onValue(moistureRef, (snapshot) => {
   const data = snapshot.val();
