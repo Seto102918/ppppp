@@ -16,24 +16,22 @@ const existsSync = (timeDMY, timeHM, value, moistureYangMana) => {
     if (fs.existsSync(`./data/${timeDMY}.json`)){
         console.log(`./data/${timeDMY}.json exist!`)
         try{
-            const filejson = require(`./data/${timeDMY}.json`)
+            const file = require(`./data/${timeDMY}.json`)
             switch (moistureYangMana){
                 case 1:
-                    filejson.moisture.push(isi)
+                    file.moisture.push(isi)
                     break
                 case 2:
-                    filejson.moisture2.push(isi)
+                    file.moisture2.push(isi)
                     break
             }
-            writejson(timeDMY,filejson)
+            writejson(timeDMY,file)
             
         }catch (e) {console.log("Error" + e);}
         
     }else if (!fs.existsSync(`./data/${timeDMY}.json`)){
         console.log(`./data/${timeDMY}.json doesnt exist, creating new!`)
-
         var val = { moisture:[] , moisture2: []}
-
         try{
             switch (moistureYangMana){
                 case 1:
