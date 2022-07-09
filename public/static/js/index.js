@@ -4,25 +4,13 @@ import { getDatabase, ref, onValue, set} from "https://cdnjs.cloudflare.com/ajax
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut  } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-auth.min.js";
 
-// const socket = io("http://localhost:8080")
-// socket.on("connect", () => {
-//   console.log("socket ID: " + socket.id)
-//   socket.on("dataUpdate", datanya => {
-//     ////
-//   })
-// })
+const socket = io("http://localhost:8080")
+socket.on("connect", () => {
+  console.log("socket ID: " + socket.id)
+})
+socket.emit('custom-event', 10, 'hi', {a : 'wow'})
 
 /////initialize DATABEZZ/////
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCWXmej8_QGBrQtkaETSrzsu2NocNZT3FY",
-//   authDomain: "projectiot-2af49.firebaseapp.com",
-//   databaseURL: "https://projectiot-2af49-default-rtdb.asia-southeast1.firebasedatabase.app",
-//   projectId: "projectiot-2af49",
-//   storageBucket: "projectiot-2af49.appspot.com",
-//   messagingSenderId: "176019695566",
-//   appId: "1:176019695566:web:96ca2ecc715fdb9edaad9f",
-//   measurementId: "G-XG0D9KWDRS"
-// };
 const firebaseConfig = {
   apiKey: "AIzaSyB-Yzm45NRR3TaLLE6bNqAo2Yllu1HdTLE",
   authDomain: "garden1-53f71.firebaseapp.com",
@@ -44,6 +32,7 @@ const topRight= document.getElementsByClassName("top-right");
 const botLeft = document.getElementsByClassName("bottom-left");
 const parentDiv = document.getElementById(`containersize`);
 const right = document.getElementById('right');
+const top = document.getElementById('top');
 var w,h, width, height;
 
 conDiv.style.display = "none";
@@ -58,7 +47,7 @@ singInButton.addEventListener("click",() => {
     const user = userCredential.user;
     authDiv.style.display = "none";
     conDiv.style.display = "block";
-    
+    top.style.maxHeight = "100%";
     loginAnimation();
   })
   .catch((error) => {
@@ -68,12 +57,13 @@ singInButton.addEventListener("click",() => {
 
 function loginAnimation(){
   var tl = gsap.timeline();
-  tl.to(background,{opacity: 0, duration: 0.5, ease: 'back', onComplete: () => {background.style.display = "none";}})
+  tl.to(background,{opacity: 0, duration: 0.5, ease: 'back', onComplete: () => {
+    background.style.display = "none"; 
+  }})
     .to(topLeft,{opacity: 1, y: 0 , duration: 0.35, ease: 'back'})
     .to(topRight,{opacity: 1, y: 0, duration: 0.35, ease: 'back'})
     .to(botLeft,{opacity: 1, y: 0, duration: 0.35, ease: 'back'});
 }
-
 
 const timeParse = d3.timeParse("%H:%M");
 var moistureData = [];
@@ -110,9 +100,6 @@ async function ambilData(){
     if (i != 0){ moisture_pp = moistureData[i-1].value || null; }
     if (moisture_p > moisture_pp && i != 0){ maxMoisture = moisture_p;}
   }
-
-  console.log( "moisture Data :" +JSON.stringify(moistureData))
-  console.log( "moisture Data2 :" +JSON.stringify(moistureData_2))
 }
 
 ///////Buat Graph Top Left
@@ -135,40 +122,63 @@ finalInt = (valueInt2/maxValue)*100;
 move(finalInt, "myBar2");
 
 //////////
-const db = getDatabase();
-const moistureRef = ref(db, 'plant1/humidity1');
-const moisture2Ref = ref(db, 'plant2/humidity');
-
-onValue(moistureRef, (snapshot) => {
-  const data = snapshot.val();
+socket.on('moisture_update', moistureInput => {
+  const data = moistureInput;
   text.innerText = data;
   finalInt = (data/maxValue)*100;
 
-  move(finalInt, "myBar")
-  refreshChart()
-});
+  var date = new Date();
+  var waktu = `${date.getHours()}:${date.getMinutes()}`;
+  var hasil = timeParse(waktu)
 
-onValue(moisture2Ref, (snapshot) => {
-  const data = snapshot.val();
+  var obj = {"value": moistureInput,"time": hasil}
+  moistureData.push(obj)
+
+  var obj_p = {"value": moistureData_2[moistureData_2.length-1].value,"time": hasil}
+  moistureData_2.push(obj_p)
+
+  move(finalInt, "myBar")
+  refreshChart();
+})
+
+socket.on('moisture_update_2', moistureInput2 => {
+  const data = moistureInput2;
   text2.innerText = data;
   finalInt = (data/maxValue)*100;
 
-  move(finalInt, "myBar2")
-});
+  var date = new Date();
+  var waktu = `${date.getHours()}:${date.getMinutes()}`;
+  var hasil = timeParse(waktu)
 
+  var obj = {"value": moistureInput2,"time": hasil}
+  moistureData_2.push(obj)
+  
+  var obj_p = {"value": moistureData[moistureData.length-1].value,"time": hasil}
+  moistureData.push(obj_p)
+
+  move(finalInt, "myBar2")
+  refreshChart();
+})
+
+var state;
+socket.on('button_event', state => {
+  if (state == 0){
+    button.style.backgroundColor = '#1ed75f';
+  }else if(state == 1){
+    button.style.backgroundColor = '#121212';
+  }else{
+    console.log("Error Pump state != 0 / 1")
+  }
+})
 //////on Window Resize
 window.addEventListener('resize', function (event) {
   removeChart()
-  console.log('Resive event')
   createTopLeft()
 }, false);
 
 //////////////////////F*CKTIONS
 async function refreshChart(){
   removeChart()
-  moistureData = []
-  moistureData_2 = []
-  await ambilData()
   createTopLeft()
 }
 
@@ -181,6 +191,10 @@ function createTopLeft(){
   var data;
   if (maxMoisture >= maxMoisture_2) { data = moistureData; }
   else { data = moistureData_2; }
+
+  var date = new Date();
+  var waktu = `${date.getHours()}:${date.getMinutes()}`;
+  var waktu_sekarang = timeParse(waktu);
 
   w = parentDiv.clientWidth || 720;
   h = parentDiv.clientHeight || 360;
@@ -199,7 +213,9 @@ function createTopLeft(){
       .attr("transform", `translate(${margin.left},${margin.top})`)
 
   var x = d3.scaleTime()
-    .domain(d3.extent(moistureData, function (d){return d.time;}))
+    .domain(d3.extent(moistureData, function (d){
+      return d.time;
+    }))
     .range([0, width]);
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -266,24 +282,8 @@ function move(persen, id) {
   gsap.to(elem,{width: `${persen}%`, duration: 1, ease: 'back'})
 }
 
-var state;
-const pumpRef = ref(db, 'Waterpump');
-
-onValue(pumpRef, (snapshot) => {
-  state = snapshot.val();
-  if (state == 0){
-    button.style.backgroundColor = '#1ed75f';
-  }else if(state == 1){
-    button.style.backgroundColor = '#121212';
-  }else{
-    console.log("Error Pump state != 0 / 1")
-  }
-});
-
 const button = document.getElementById('waterPumpButton');
-
 button.addEventListener('click', () => {
-
   if (state == 0){
     set(pumpRef, 1);
     button.style.backgroundColor = '#1ed75f';
@@ -293,6 +293,5 @@ button.addEventListener('click', () => {
   }else{
     console.log("Error Pump state != 0 / 1")
   }
-
 });
   

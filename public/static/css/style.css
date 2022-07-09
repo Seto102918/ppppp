@@ -54,7 +54,7 @@ p {
 .authContainer {
     display: grid;
     place-items: center;
-    overflow-x: hidden;
+    overflow: hidden;
     position: absolute;
     z-index: 100;
     top: 0;
@@ -177,6 +177,7 @@ input{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    max-height: 100vh;
 }
 
 /* .top > div {
@@ -352,14 +353,23 @@ input{
     .top {
         padding: 1em 1em 0 1em;
         flex-direction: column;
+        height: 100%;
     }
 
     .top-left {
+        height: fit-content;
         width: 100%;
         margin-bottom: 1em;
+        overflow: hidden;
     }
 
     .top-right {
+        width: 100%;
+        height: fit-content;
+    }
+
+    .right{
+        flex-direction: column;
         width: 100%;
         height: fit-content;
     }
@@ -369,18 +379,20 @@ input{
         margin: 1em 0 1em 0;
     }
     #container {
-        height: 30%;
+        height: fit-content;
         margin: 0rem 1rem 1rem 1rem;
         overflow: visible;
     }
 
+    .containerdalem{
+        margin: 1em 0 1em 0;
+    }
     #container svg {
         transform: scaleX(1.04);
     }
 
     #container2 {
         min-height: 30vw;
-        margin: 0.5rem 1rem 1rem 1rem;
     }
 
     #container3{
@@ -394,7 +406,7 @@ input{
         text-align: center;
     }
 
-    #moistureValue {
+    .valueShow {
         font-size: 10vw;
     }
 

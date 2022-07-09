@@ -15,41 +15,21 @@ const { getDate , getTime } = require('./timeModule')
 const { existsSync } = require('./fileModule')
 
 console.log("port" + port)
-////////////////////////////////////////socket io/////////////////////////////////
-
+////////////////////////////////////////socket io DUAR/////////////////////////////////
 const app = express();
 const httpServer = http.createServer(app);
-const io = new Server(httpServer, { /* options */ });
-
-io.on("connection", (socket) => {
-  console.log("socket ID: " + socket.id)
-  socket.on("dataUpdate", datanya => {
-
-  })
-});
-
+const io = new Server(httpServer, {});
 /////////////////////////////////////////Express///////////////////////////////////////////
-
 app.use(express.static('public'));
-
 app.engine('handlebars', engine({ 
     defaultLayout: 'main',
     partialsDir:'views/partials'
 }));
-
 app.set('view engine', 'handlebars');
 app.set('views', './views');
-
-
 //////////////////////////////////////////FIREBASE///////////////////////////////////////////
-// var serviceAccount = require("./projectiot-2af49-firebase-adminsdk-6yegi-c0eac48505.json")
 var serviceAccount = require("./garden1-53f71-firebase-adminsdk-th80d-0d6e9d4558.json");
 const { storage } = require('firebase-admin');
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: "https://projectiot-2af49-default-rtdb.asia-southeast1.firebasedatabase.app",
-//   storageBucket:'gs://projectiot-2af49.appspot.com'
-// });
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -61,31 +41,43 @@ var bucket = admin.storage().bucket();
 var moistureInput, moistureInput2
 const refmoisture = admin.database().ref('plant1/humidity1');
 const refmoisture2 = admin.database().ref('plant2/humidity');
+const pumpRef = admin.database().ref('Button');
 
-refmoisture.on('value', (snapshot) => {
-    let timeHM = getTime()
-    let timeDMY = getDate()
-    console.log(`moisture: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
-    moistureInput = snapshot.val();
-    existsSync(timeDMY, timeHM, snapshot.val(), 1)
+io.on("connection", (socket) => {
+    console.log("socket ID: " + socket.id)
 
-    bucket.upload(`./data/${timeDMY}.json`);
+    refmoisture.on('value', (snapshot) => {
+        let timeHM = getTime()
+        let timeDMY = getDate()
+        console.log(`moisture: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
+        moistureInput = snapshot.val();
+        existsSync(timeDMY, timeHM, snapshot.val(), 1)
 
-}, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
+        bucket.upload(`./data/${timeDMY}.json`);
+        socket.emit("moisture_update", moistureInput);
+    }, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
+
+    refmoisture2.on('value', (snapshot) => {
+        let timeHM = getTime()
+        let timeDMY = getDate()
+        console.log(`moisture: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
+        moistureInput2 = snapshot.val();
+        existsSync(timeDMY, timeHM, snapshot.val(), 2)
+
+        bucket.upload(`./data/${timeDMY}.json`);
+        socket.emit("moisture_update_2", moistureInput2);
+
+    }, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
+
+    pumpRef.on('value', (snapshot) => {
+        var state = snapshot.val();
+        socket.emit("button_event", state);
+    }, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
+
+});
 
 
-refmoisture2.on('value', (snapshot) => {
-    let timeHM = getTime()
-    let timeDMY = getDate()
-    console.log(`moisture: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
-    moistureInput2 = snapshot.val();
-    existsSync(timeDMY, timeHM, snapshot.val(), 2)
-
-    bucket.upload(`./data/${timeDMY}.json`);
-
-}, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
-
-///////////////////////////////////////LANJUT EXPRESS///////////////
+///////////////////////////////////////LANJUT EXPRESS PPPPPPPPPPPP///////////////
 app.get('/', function (req, res) {
     res.render('home',{
         moistureInput: moistureInput,
