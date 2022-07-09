@@ -65,44 +65,86 @@ function loginAnimation(){
     .to(botLeft,{opacity: 1, y: 0, duration: 0.35, ease: 'back'});
 }
 
-const db = getDatabase();
-const moistureRef = ref(db, 'moisture');
-const timeParse = d3.timeParse("%H:%M | %d-%b-%Y");
 
+const timeParse = d3.timeParse("%H:%M");
 var moistureData = [];
-var data;
+var moistureData_2 = [];
+var maxMoisture, maxMoisture_2, batesData;
 
 async function ambilData(){
-  data =  await axios.get('/api/moistureData');
+  const data =  await axios.get('/api/moistureData');
+  var moisture_p, moisture_pp;
+  var moisture2_p, moisture2_pp;
+
   data.data.moisture.forEach(moisture => {
     var hasil = timeParse(moisture.time)
-    var obj = {"value": moisture.value,"time": hasil }
+    var obj = {"value": moisture.value,"time": hasil}
+
     moistureData.push(obj)
   });
+
+  data.data.moisture2.forEach(moisture2 => {
+    var hasil = timeParse(moisture2.time)
+    var obj = {"value": moisture2.value,"time": hasil}
+
+    moistureData_2.push(obj)
+  });
+
+  for (let i = 0; i < moistureData_2.length; i++) {
+    moisture2_p = moistureData_2[i].value;
+    if (i != 0){ moisture2_pp = moistureData_2[i-1].value || null; }
+    if (moisture2_p > moisture2_pp && i != 0){ maxMoisture_2 = moisture2_p;}
+  }
+
+  for (let i = 0; i < moistureData.length; i++) {
+    moisture_p = moistureData[i].value;
+    if (i != 0){ moisture_pp = moistureData[i-1].value || null; }
+    if (moisture_p > moisture_pp && i != 0){ maxMoisture = moisture_p;}
+  }
+
+  console.log( "moisture Data :" +JSON.stringify(moistureData))
+  console.log( "moisture Data2 :" +JSON.stringify(moistureData_2))
 }
 
 ///////Buat Graph Top Left
 await ambilData();
 createTopLeft();
 
-////TOP Right + Firebase RDB TopRight
+///////////
 var finalInt
 var text = document.getElementById('moistureValue');
 var valuetext = text.innerText;
 var valueInt = parseInt(valuetext);
 var maxValue = 5000;
-
 finalInt = (valueInt/maxValue)*100;
-move(finalInt);
+move(finalInt, "myBar");
+
+var text2 = document.getElementById('moistureValue2');
+var valuetext2 = text2.innerText;
+var valueInt2 = parseInt(valuetext2);
+finalInt = (valueInt2/maxValue)*100;
+move(finalInt, "myBar2");
+
+//////////
+const db = getDatabase();
+const moistureRef = ref(db, 'moisture');
+const moisture2Ref = ref(db, 'moisture2');
 
 onValue(moistureRef, (snapshot) => {
   const data = snapshot.val();
   text.innerText = data;
   finalInt = (data/maxValue)*100;
-  console.log("finalInt" + finalInt)
 
-  move(finalInt)
+  move(finalInt, "myBar")
   refreshChart()
+});
+
+onValue(moisture2Ref, (snapshot) => {
+  const data = snapshot.val();
+  text2.innerText = data;
+  finalInt = (data/maxValue)*100;
+
+  move(finalInt, "myBar2")
 });
 
 //////on Window Resize
@@ -116,6 +158,7 @@ window.addEventListener('resize', function (event) {
 async function refreshChart(){
   removeChart()
   moistureData = []
+  moistureData_2 = []
   await ambilData()
   createTopLeft()
 }
@@ -126,7 +169,9 @@ function removeChart(){
 }
 
 function createTopLeft(){
-  data = moistureData;
+  var data;
+  if (maxMoisture >= maxMoisture_2) { data = moistureData; }
+  else { data = moistureData_2; }
 
   w = parentDiv.clientWidth || 720;
   h = parentDiv.clientHeight || 360;
@@ -145,121 +190,70 @@ function createTopLeft(){
       .attr("transform", `translate(${margin.left},${margin.top})`)
 
   var x = d3.scaleTime()
-    .domain(d3.extent(data, function (d){return d.time;}))
+    .domain(d3.extent(moistureData, function (d){return d.time;}))
     .range([0, width]);
-  // svg.append("g")
-  //   .attr("transform", "translate(0," + height + ")")
-  //   .call(d3.axisBottom(x));
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
 
-  var xAxis = svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x));
-
-  
   var y = d3.scaleLinear()
-    .domain([0, d3.max(data, function (d){return + d.value;})])
+    .domain([0, 5000])
     .range([height, 0]);
   svg.append("g")
     .call(d3.axisLeft(y));
-  
-  var clip = svg.append("defs").append("svg:clipPath")
-    .attr("id", "clip")
-    .append("svg:rect")
-    .attr("width", width )
-    .attr("height", height )
-    .attr("x", 0)
-    .attr("y", 0);
 
-  var brush = d3.brushX()
-      .extent( [ [0,0], [width,height] ] )
-      // .on("end", updateChart)
+  /////////////////////////moisture data
   
-  var scatter = svg.append('g')
-    .attr("clip-path", "url(#clip)")
-
-  
-  
-  const Tooltip = d3.select("#container")
-      .append("div")
-      .style("opacity", 0)
-      .attr("class", "tooltip")
-      .style("background-color", "#1ed75f")
-      .style("border", "solid")
-      .style("font-weight","600")
-      .style("border-width", "0px")
-      .style("border-radius", "5px")
-      .style("padding", "5px")
-
-      const mouseover = function(event,d) {
-        Tooltip
-          .style("opacity", 1)
-      }
-      const mousemove = function(event,d) {
-        Tooltip
-          .html("Exact value: " + d.value)
-          .style("left", `${event.layerX+10}px`)
-          .style("top", `${event.layerY}px`)
-      }
-      const mouseleave = function(event,d) {
-        Tooltip
-          .style("opacity", 0)
-      }
-    
-  scatter
-    .append("path")
-    .datum(data)
-    .attr("stroke", "white")
+  svg.append("path")
+    .datum(moistureData)
     .attr("fill", "none")
-    .attr("stroke-width", 3)
+    .attr("stroke", "#69b3a2")
+    .attr("stroke-width", 1.5)
+    .attr("d", d3.line()
+      .x(function(d) { return x(d.time) })
+      .y(function(d) { return y(d.value) })
+    )
+   
+  svg
+    .append("g")
+    .selectAll("dot")
+    .data(moistureData)
+    .enter()
+    .append("circle")
+      .attr("cx", function(d) { return x(d.time) } )
+      .attr("cy", function(d) { return y(d.value) } )
+      .attr("r", 5)
+      .attr("fill", "#69b3a2")
+
+  
+ /////////////////////////moisture data2
+
+ svg.append("path")
+    .datum(moistureData_2)
+    .attr("fill", "none")
+    .attr("stroke", "white")
+    .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(d => x(d.time))
       .y(d => y(d.value))
-    )  
-
-  scatter
-    .selectAll("circle")
-    .data(data)
+    )
+   
+  svg
+    .append("g")
+    .selectAll("dot")
+    .data(moistureData_2)
     .enter()
     .append("circle")
-      .attr("cx", function (d) { return x(d.time); } )
-      .attr("cy", function (d) { return y(d.value); } )
-      .attr("r", 8)
-      .style("opacity", 1)
-      .attr("fill", "#1ed75f")
-      .on("mouseover", mouseover)
-      .on("mousemove", mousemove)
-      .on("mouseleave", mouseleave)
-      
-  
+      .attr("cx", d => x(d.time))
+      .attr("cy", d => y(d.value))
+      .attr("r", 5)
+      .attr("fill", "white")
 
-  var idleTimeout
-  function idled() { idleTimeout = null; }
-
-  function updateChart(event) {
-    var extent = event.selection
-    if(!extent){
-      if (!idleTimeout) return idleTimeout = setTimeout(idled, 350);
-      x.domain(d3.extent(data, function (d){return d.time;}));
-    }else{
-      x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
-      scatter.select(".brush").call(brush.move, null)
-    }
-
-    xAxis.transition().duration(1000).call(d3.axisBottom(x))
-    scatter
-      .selectAll("circle")
-      .transition().duration(1000)
-      .attr("cx", function (d) { return x(d.time); } )
-      .attr("cy", function (d) { return y(d.value); } )
-
-    }
-
-    
 }
 
-function move(persen) {
+function move(persen, id) {
   persen = Math.ceil(persen)
-  var elem = document.getElementById("myBar");
+  var elem = document.getElementById(id);
   gsap.to(elem,{width: `${persen}%`, duration: 1, ease: 'back'})
 }
 

@@ -24,7 +24,6 @@
 
 body {
     overflow: hidden;
-    
     width: 100%;
     height: 100%;
     position: relative;
@@ -190,8 +189,8 @@ input{
 
 /*//////////////////////////////////////////*/
 .top-left {
-    width: 60vw;
-    height: 100%;
+    width: 65vw;
+    height: 95vh;
     margin-right: 1em;
     opacity: 0;
     transform: translateY(10%);
@@ -199,25 +198,34 @@ input{
     border-radius: 20px;
     background-color: var(--warna-secondary);
 }
-
 .right{
-    height: 100%;
+    width: 30vw;
+    height: 95vh;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
 }
+
 .top-right {
-    width: 35vw;
+    width: 100%;
     opacity: 0;
-    height: 60vh;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     transform: translateY(10%);
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
     border-radius: 20px;
     background-color: var(--warna-secondary);
     padding: 1em;
 }
-
+/* .top-right > div{
+    margin: 3em 0 3em 0;
+} */
 .bottom-left {
-    width: 35vw;
-    height: 100%;
-    margin-top: 2em;
+    width: 100%;
+    height: 20%;
+    margin-top: 5%;
     opacity: 0;
     transform: translateY(10%);
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
@@ -262,8 +270,7 @@ input{
 }
 /*//////////////////////////////////////////*/
 #container2 {
-    height: 80%;
-    transform: scaleX(1.01);
+    height: 35%;
     padding: 0;
     border-radius: 20px;
     display: flex;
@@ -271,26 +278,34 @@ input{
     justify-content: center;
     align-items: center;
 }
-
+#container5{
+    height: 35%;
+    padding: 0;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 #containersize{
     height: 85vh;
 }
-#myProgress {
+.progress {
     width: 80%;
     background-color: grey;
 }
 
-#myBar {
+.bar {
     width: 0%;
     height: 35px;
     background-color: #F2BE70;
 }
 
-#moistureValue {
+.valueShow {
     color: var(--warna-text);
     font-size: 7vw;
     font-family: 'Montserrat', sans-serif;
-
+    text-align: center;
 }
 
 .h2minmax {

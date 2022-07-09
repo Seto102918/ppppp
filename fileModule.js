@@ -2,21 +2,29 @@ const fs = require('fs')
 
 const writejson = (timeDMY,isi) => {
     var val = JSON.stringify(isi)
-    fs.writeFile(`./data/${timeDMY}.json`, val, function(err, result) {
+    fs.writeFileSync(`./data/${timeDMY}.json`, val, function(err, result) {
         if(err) console.log('error', err);
     });
 }
 
-const existsSync = (timeDMY, timeHM, value) => {
+const existsSync = (timeDMY, timeHM, value, moistureYangMana) => {
     var isi = {
         value : value,
-        time : `${timeHM} | ${timeDMY}`
+        time : `${timeHM}`
     }
+
     if (fs.existsSync(`./data/${timeDMY}.json`)){
         console.log(`./data/${timeDMY}.json exist!`)
         try{
             const filejson = require(`./data/${timeDMY}.json`)
-            filejson.moisture.push(isi)
+            switch (moistureYangMana){
+                case 1:
+                    filejson.moisture.push(isi)
+                    break
+                case 2:
+                    filejson.moisture2.push(isi)
+                    break
+            }
             writejson(timeDMY,filejson)
             
         }catch (e) {console.log("Error" + e);}
@@ -24,10 +32,17 @@ const existsSync = (timeDMY, timeHM, value) => {
     }else if (!fs.existsSync(`./data/${timeDMY}.json`)){
         console.log(`./data/${timeDMY}.json doesnt exist, creating new!`)
 
-        var val = { moisture:[] }
+        var val = { moisture:[] , moisture2: []}
 
         try{
-            val.moisture.push(isi)
+            switch (moistureYangMana){
+                case 1:
+                    val.moisture.push(isi)
+                    break
+                case 2:
+                    val.moisture2.push(isi)
+                    break
+            }
             writejson(timeDMY,val)
         } catch (e) {console.log("Error" + e);}
     }

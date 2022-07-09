@@ -1,108 +1,118 @@
-   <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
-    <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
-    <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
-   
-   
-   
-   
-   
-   <script>
-      anychart.onDocumentReady(function () {
-      // create data set on our data
-      var dataSet = anychart.data.set(getData());
+function createTopLeft(){
+  var data;
+  if (maxMoisture >= maxMoisture_2) { data = moistureData; }
+  else { data = moistureData_2; }
 
-      // map data for the first series, take x from the zero column and value from the first column of data set
-      var firstSeriesData = dataSet.mapAs({ x: 0, value: 1 });
+  w = parentDiv.clientWidth || 720;
+  h = parentDiv.clientHeight || 360;
+  const margin = { top: 20, right: 30, bottom: 30, left: 50 }
+  width = w - margin.left - margin.right,
+  height = h - margin.top - margin.bottom;
+  console.log("height: " + height + "||   width: " + width)
 
-      // map data for the second series, take x from the zero column and value from the second column of data set
-      var secondSeriesData = dataSet.mapAs({ x: 0, value: 2 });
+  const svg = d3.select(`#container`)
+    .append("svg")
+      .style("color", "white")
+      .attr("width", w)
+      .attr("height", h)
+    .append("g")
+      .style("color", "white")
+      .attr("transform", `translate(${margin.left},${margin.top})`)
 
-      // create line chart
-      var chart = anychart.line();
+  var x = d3.scaleTime()
+    .domain(d3.extent(data, function (d){return d.time;}))
+    .range([0, width]);
+  
+  var y = d3.scaleLinear()
+    .domain([0, d3.max(data, function (d){return d.value + 500;})])
+    .range([height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
 
-      // adding dollar symbols to yAxis labels
-      chart.yAxis().labels().format('${%Value}');
+  var scatter = svg.append('g')
+    .attr("clip-path", "url(#clip)")
+  
+  const Tooltip = d3.select("#container")
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "#1ed75f")
+      .style("border", "solid")
+      .style("font-weight","600")
+      .style("border-width", "0px")
+      .style("border-radius", "5px")
+      .style("padding", "5px")
 
-      // turn on chart animation
-      chart.animation(true);
+      const mouseover = function(event,d) {
+        Tooltip
+          .style("opacity", 1)
+      }
+      const mousemove = function(event,d) {
+        Tooltip
+          .html("Exact value: " + d.value)
+          .style("left", `${event.layerX+10}px`)
+          .style("top", `${event.layerY}px`)
+      }
+      const mouseleave = function(event,d) {
+        Tooltip
+          .style("opacity", 0)
+      }
+  
+   svg.append("path")
+      .datum(moistureData)
+      .attr("fill", "none")
+      .attr("stroke", "#69b3a2")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.value) })
+        .y(function(d) { return y(d.time) })
+        )
+  
+  // scatter
+  //   .append("path")
+  //   .datum(moistureData_2)
+  //   .attr("stroke", "white")
+  //   .attr("fill", "none")
+  //   .attr("stroke-width", 3)
+  //   .attr("d", d3.line()
+  //     .x(d => x(d.time))
+  //     .y(d => y(d.value))
+  //   )  
+    
+  // scatter
+  //   .append("path")
+  //   .datum(moistureData)
+  //   .attr("stroke", "white")
+  //   .attr("fill", "none")
+  //   .attr("stroke-width", 3)
+  //   .attr("d", d3.line()
+  //     .x(d => x(d.time))
+  //     .y(d => y(d.value))
+  //   )  
 
-      // turn on the crosshair
-      chart
-        .crosshair()
-        .enabled(true)
-        .yLabel({ enabled: false })
-        .yStroke(null)
-        .xStroke('#cecece')
-        .zIndex(99);
+  scatter
+    .selectAll("circle1")
+    .data(moistureData)
+    .enter()
+    .append("circle1")
+      .attr("cx", function (d) { return x(d.time); } )
+      .attr("cy", function (d) { return y(d.value); } )
+      .attr("r", 8)
+      .style("opacity", 1)
+      .attr("fill", "#1ed75f")
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
+      
+  scatter
+    .selectAll("circle2")
+    .data(moistureData_2)
+    .enter()
+    .append("circle2")
+      .attr("cx", function (d) { return x(d.time); } )
+      .attr("cy", function (d) { return y(d.value); } )
+      .attr("r", 8)
+      .style("opacity", 1)
+      .attr("fill", "#1ed75f")
 
-      chart
-        .yAxis()
-        .title('The Share Price')
-        .labels({ padding: [5, 5, 0, 5] });
-      chart.xAxis().title('Month/Day');
-
-      // set chart title text settings
-      chart.title(
-        'The cost of ACME\'s shares\ncompared with their main competitor during month'
-      );
-
-      // create first series with mapped data
-      var firstSeries = chart.spline(firstSeriesData);
-      firstSeries.name('ACME Share Price');
-      firstSeries.markers().zIndex(100);
-      firstSeries.hovered().markers().enabled(true).type('circle').size(4);
-
-      // create second series with mapped data
-      var secondSeries = chart.spline(secondSeriesData);
-      secondSeries.name('The Competitor\'s Share Price');
-      secondSeries.markers().zIndex(100);
-      secondSeries.hovered().markers().enabled(true).type('circle').size(4);
-
-      // turn the legend on
-      chart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
-
-      // set container id for the chart
-      chart.container('container');
-
-      // initiate chart drawing
-      chart.draw();
-    });
-
-    function getData() {
-      return [
-        ['9/1', 10, 30],
-        ['9/2', 12, 32],
-        ['9/3', 11, 35],
-        ['9/4', 15, 40],
-        ['9/5', 20, 42],
-        ['9/6', 22, 35],
-        ['9/7', 21, 36],
-        ['9/8', 25, 31],
-        ['9/9', 31, 35],
-        ['9/10', 32, 36],
-        ['9/11', 28, 40],
-        ['9/12', 29, 42],
-        ['9/13', 40, 40],
-        ['9/14', 41, 38],
-        ['9/15', 45, 40],
-        ['9/16', 50, 40],
-        ['9/17', 65, 38],
-        ['9/18', 45, 36],
-        ['9/19', 50, 30],
-        ['9/20', 51, 29],
-        ['9/21', 65, 28],
-        ['9/22', 60, 25],
-        ['9/23', 62, 28],
-        ['9/24', 65, 29],
-        ['9/25', 45, 30],
-        ['9/26', 55, 40],
-        ['9/27', 59, 32],
-        ['9/28', 52, 33],
-        ['9/29', 53, 34],
-        ['9/30', 40, 30],
-        ['9/31', 45, 35]
-      ];
-    }
-    </script>
+}

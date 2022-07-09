@@ -50,33 +50,46 @@ admin.initializeApp({
 });
 var bucket = admin.storage().bucket();
 
-var moistureInput
+var moistureInput, moistureInput2
 const refmoisture = admin.database().ref('moisture');
+const refmoisture2 = admin.database().ref('moisture2');
 
 refmoisture.on('value', (snapshot) => {
     let timeHM = getTime()
     let timeDMY = getDate()
     console.log(`moisture: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
-
-    existsSync(timeDMY, timeHM, snapshot.val())
-    moistureInput = snapshot.val()
-
-    app.get('/api/moistureData', (req, res) => {
-        const data = require(`./data/${timeDMY}.json`)
-        res.json(data);
-    });
+    moistureInput = snapshot.val();
+    existsSync(timeDMY, timeHM, snapshot.val(), 1)
 
     bucket.upload(`./data/${timeDMY}.json`);
 
 }, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
 
 
+refmoisture2.on('value', (snapshot) => {
+    let timeHM = getTime()
+    let timeDMY = getDate()
+    console.log(`moisture: ${timeDMY} || ${timeHM} || value: ${snapshot.val()}`)
+    moistureInput2 = snapshot.val();
+    existsSync(timeDMY, timeHM, snapshot.val(), 2)
+
+    bucket.upload(`./data/${timeDMY}.json`);
+
+}, (errorObject) => {console.log('The read failed: ' + errorObject.name);}); 
+
 ///////////////////////////////////////LANJUT EXPRESS///////////////
 app.get('/', function (req, res) {
     res.render('home',{
-        moistureInput: moistureInput
+        moistureInput: moistureInput,
+        moistureInput2: moistureInput2
     });
 });
+
+app.get('/api/moistureData', (req, res) => {
+    const moistureData = require(`./data/${ getDate() }.json`)
+    res.json(moistureData);
+});
+
 
 httpServer.listen(port,function(error){
     if(error){ 
