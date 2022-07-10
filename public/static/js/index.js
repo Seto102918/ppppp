@@ -4,11 +4,10 @@ import { getDatabase, ref, onValue, set} from "https://cdnjs.cloudflare.com/ajax
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut  } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-auth.min.js";
 
-const socket = io("https://setongeteslagi.herokuapp.com/")
+const socket = io("http://localhost:8080/")
 socket.on("connect", () => {
   console.log("socket ID: " + socket.id)
 })
-socket.emit('custom-event', 10, 'hi', {a : 'wow'})
 
 /////initialize DATABEZZ/////
 const firebaseConfig = {
