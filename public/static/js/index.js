@@ -218,6 +218,32 @@ function createTopLeft(){
     .range([height, 0]);
   svg.append("g")
     .call(d3.axisLeft(y));
+  /////////////////////////////
+  const Tooltip = d3.select("#container")
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "#1ed75f")
+      .style("border", "solid")
+      .style("font-weight","600")
+      .style("border-width", "0px")
+      .style("border-radius", "5px")
+      .style("padding", "5px")
+
+      const mouseover = function(event,d) {
+        Tooltip
+          .style("opacity", 1)
+      }
+      const mousemove = function(event,d) {
+        Tooltip
+          .html("Exact value: " + d.value)
+          .style("left", `${event.layerX+10}px`)
+          .style("top", `${event.layerY}px`)
+      }
+      const mouseleave = function(event,d) {
+        Tooltip
+          .style("opacity", 0)
+      }
 
   /////////////////////////moisture data
   
@@ -241,6 +267,9 @@ function createTopLeft(){
       .attr("cy", function(d) { return y(d.value) } )
       .attr("r", 5)
       .attr("fill", "#69b3a2")
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
 
   
  /////////////////////////moisture data2
@@ -265,8 +294,48 @@ function createTopLeft(){
       .attr("cy", d => y(d.value))
       .attr("r", 5)
       .attr("fill", "white")
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
 
+
+  svg
+    .selectAll("myLabels")
+    .data(moistureData)
+    .enter()
+      .append('g')
+      .append("text")
+        .attr("class", "moistureData")
+        .datum(function(d) { 
+          return {name: "moistureData" , value: moistureData[moistureData.length - 1]}
+        })
+          .attr("transform", function(d) { 
+            return "translate(" + x(d.value.time) + "," + y(d.value.value) + ")"; })
+          .attr("x", -40)
+          .attr("y", 30)
+          .text("Plant 1")
+          .style("fill", "white")
+          .style("font-size", 15)
+
+  svg
+    .selectAll("myLabels")
+    .data(moistureData_2)
+    .enter()
+      .append('g')
+      .append("text")
+        .attr("class", "moistureData")
+        .datum(function(d) { 
+          return {name: "moistureData" , value: moistureData_2[moistureData_2.length - 1]}
+        })
+          .attr("transform", function(d) { 
+            return "translate(" + x(d.value.time) + "," + y(d.value.value) + ")"; })
+          .attr("x", -40)
+          .attr("y", 30)
+          .text("Plant 2")
+          .style("fill", "white")
+          .style("font-size", 15)
 }
+
 
 function move(persen, id) {
   persen = Math.ceil(persen)

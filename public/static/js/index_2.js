@@ -126,12 +126,15 @@ function createTopLeft(){
   svg.append("g")
     .call(d3.axisLeft(y));
 
+//////////////////////
+  
   /////////////////////////moisture data
   
   svg.append("path")
     .datum(moistureData)
     .attr("fill", "none")
     .attr("stroke", "#69b3a2")
+    .text("Plant 1")
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function(d) { return x(d.time) })
@@ -172,5 +175,40 @@ function createTopLeft(){
       .attr("cy", d => y(d.value))
       .attr("r", 5)
       .attr("fill", "white")
+  
+    svg
+    .selectAll("myLabels")
+    .data(moistureData)
+    .enter()
+      .append('g')
+      .append("text")
+        .attr("class", "moistureData")
+        .datum(function(d) { 
+          return {name: "moistureData" , value: moistureData[moistureData.length - 1]}
+        })
+          .attr("transform", function(d) { 
+            return "translate(" + x(d.value.time) + "," + y(d.value.value) + ")"; })
+          .attr("x", -40)
+          .attr("y", 30)
+          .text("Plant 1")
+          .style("fill", "white")
+          .style("font-size", 15)
 
+  svg
+    .selectAll("myLabels")
+    .data(moistureData_2)
+    .enter()
+      .append('g')
+      .append("text")
+        .attr("class", "moistureData")
+        .datum(function(d) { 
+          return {name: "moistureData" , value: moistureData_2[moistureData_2.length - 1]}
+        })
+          .attr("transform", function(d) { 
+            return "translate(" + x(d.value.time) + "," + y(d.value.value) + ")"; })
+          .attr("x", -40)
+          .attr("y", 30)
+          .text("Plant 2")
+          .style("fill", "white")
+          .style("font-size", 15)
 }
