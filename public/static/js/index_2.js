@@ -1,73 +1,17 @@
 import * as d3 from "https://cdn.skypack.dev/d3@7";
 import axios from 'https://cdn.skypack.dev/axios';
-import { getDatabase, ref, onValue, set} from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-database.min.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut  } from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.3/firebase-auth.min.js";
+
+const parentDiv = document.getElementById('webview_container');
 
 const socket = io("https://setongeteslagi.herokuapp.com/")
 socket.on("connect", () => {
   console.log("socket ID: " + socket.id)
 })
 
-/////initialize DATABEZZ/////
-const firebaseConfig = {
-  apiKey: "AIzaSyB-Yzm45NRR3TaLLE6bNqAo2Yllu1HdTLE",
-  authDomain: "garden1-53f71.firebaseapp.com",
-  databaseURL: "https://garden1-53f71-default-rtdb.firebaseio.com",
-  projectId: "garden1-53f71",
-  storageBucket: "garden1-53f71.appspot.com",
-  messagingSenderId: "733557734745",
-  appId: "1:733557734745:web:a24c0912247181623e6048"
-};
-
-initializeApp(firebaseConfig);
-const auth = getAuth();
-
-const authDiv = document.getElementById("authDiv");
-const conDiv = document.getElementById("container");
-const background = document.getElementById("backgroundAuth");
-const topLeft = document.getElementsByClassName("top-left");
-const topRight= document.getElementsByClassName("top-right");
-const botLeft = document.getElementsByClassName("bottom-left");
-const parentDiv = document.getElementById(`containersize`);
-const right = document.getElementById('right');
-const top = document.getElementById('top');
-var w,h, width, height;
-
-conDiv.style.display = "none";
-
-const singInButton = document.getElementById("buttonSignin");
-singInButton.addEventListener("click",() => {
-  var emailInput = document.getElementById("emailInput").value;
-  var passwordInput = document.getElementById("passwordInput").value;
-
-  signInWithEmailAndPassword(auth, emailInput, passwordInput)
-  .then((userCredential) => {
-    const user = userCredential.user;
-    authDiv.style.display = "none";
-    conDiv.style.display = "block";
-    top.style.maxHeight = "100%";
-    loginAnimation();
-  })
-  .catch((error) => {
-    alert(`${error.code} : ${error.message}`)
-  });
-})
-
-function loginAnimation(){
-  var tl = gsap.timeline();
-  tl.to(background,{opacity: 0, duration: 0.5, ease: 'back', onComplete: () => {
-    background.style.display = "none"; 
-  }})
-    .to(topLeft,{opacity: 1, y: 0 , duration: 0.35, ease: 'back'})
-    .to(topRight,{opacity: 1, y: 0, duration: 0.35, ease: 'back'})
-    .to(botLeft,{opacity: 1, y: 0, duration: 0.35, ease: 'back'});
-}
-
 const timeParse = d3.timeParse("%H:%M");
 var moistureData = [];
 var moistureData_2 = [];
-var maxMoisture, maxMoisture_2, batesData;
+var maxMoisture, maxMoisture_2;
 
 async function ambilData(){
   const data =  await axios.get('/api/moistureData');
@@ -105,27 +49,7 @@ async function ambilData(){
 await ambilData();
 createTopLeft();
 
-///////////
-var finalInt
-var text = document.getElementById('moistureValue');
-var valuetext = text.innerText;
-var valueInt = parseInt(valuetext);
-var maxValue = 5000;
-finalInt = (valueInt/maxValue)*100;
-move(finalInt, "myBar");
-
-var text2 = document.getElementById('moistureValue2');
-var valuetext2 = text2.innerText;
-var valueInt2 = parseInt(valuetext2);
-finalInt = (valueInt2/maxValue)*100;
-move(finalInt, "myBar2");
-
-//////////
 socket.on('moisture_update', moistureInput => {
-  const data = moistureInput;
-  text.innerText = data;
-  finalInt = (data/maxValue)*100;
-
   var date = new Date();
   var waktu = `${date.getHours()}:${date.getMinutes()}`;
   var hasil = timeParse(waktu)
@@ -135,16 +59,10 @@ socket.on('moisture_update', moistureInput => {
 
   var obj_p = {"value": moistureData_2[moistureData_2.length-1].value,"time": hasil}
   moistureData_2.push(obj_p)
-
-  move(finalInt, "myBar")
   refreshChart();
 })
 
 socket.on('moisture_update_2', moistureInput2 => {
-  const data = moistureInput2;
-  text2.innerText = data;
-  finalInt = (data/maxValue)*100;
-
   var date = new Date();
   var waktu = `${date.getHours()}:${date.getMinutes()}`;
   var hasil = timeParse(waktu)
@@ -155,24 +73,11 @@ socket.on('moisture_update_2', moistureInput2 => {
   var obj_p = {"value": moistureData[moistureData.length-1].value,"time": hasil}
   moistureData.push(obj_p)
 
-  move(finalInt, "myBar2")
   refreshChart();
 })
 
-var state;
-socket.on('button_event', state => {
-  if (state == 0){
-    button.style.backgroundColor = '#1ed75f';
-  }else if(state == 1){
-    button.style.backgroundColor = '#121212';
-  }else{
-    console.log("Error Pump state != 0 / 1")
-  }
-})
-//////on Window Resize
 window.addEventListener('resize', function (event) {refreshChart()}, false);
 
-//////////////////////F*CKTIONS
 async function refreshChart(){
   removeChart()
   createTopLeft()
@@ -180,22 +85,24 @@ async function refreshChart(){
 
 function removeChart(){
   d3.selectAll('svg').remove();
-  d3.select("#container").append("svg").remove()
+  d3.select("#container_buat_app").append("svg").remove()
 }
+
+
 
 function createTopLeft(){
   var data;
   if (maxMoisture >= maxMoisture_2) { data = moistureData; }
   else { data = moistureData_2; }
 
-  w = parentDiv.clientWidth || 720;
-  h = parentDiv.clientHeight || 360;
+  var w = parentDiv.clientWidth || 720;
+  var h = parentDiv.clientHeight || 360;
   const margin = { top: 20, right: 30, bottom: 30, left: 50 }
-  width = w - margin.left - margin.right,
-  height = h - margin.top - margin.bottom;
+  var width = w - margin.left - margin.right
+  var height = h - margin.top - margin.bottom
   console.log("height: " + height + "||   width: " + width)
 
-  const svg = d3.select(`#container`)
+  const svg = d3.select(`#container_buat_app`)
     .append("svg")
       .style("color", "white")
       .attr("width", w)
@@ -267,23 +174,3 @@ function createTopLeft(){
       .attr("fill", "white")
 
 }
-
-function move(persen, id) {
-  persen = Math.ceil(persen)
-  var elem = document.getElementById(id);
-  gsap.to(elem,{width: `${persen}%`, duration: 1, ease: 'back'})
-}
-
-const button = document.getElementById('waterPumpButton');
-button.addEventListener('click', () => {
-  if (state == 0){
-    set(pumpRef, 1);
-    button.style.backgroundColor = '#1ed75f';
-  }else if(state == 1){
-    set(pumpRef, 0);
-    button.style.backgroundColor = '#121212';
-  }else{
-    console.log("Error Pump state != 0 / 1")
-  }
-});
-  

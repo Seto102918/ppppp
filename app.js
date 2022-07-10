@@ -20,7 +20,7 @@ const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {});
 /////////////////////////////////////////Express///////////////////////////////////////////
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 app.engine('handlebars', engine({ 
     defaultLayout: 'main',
     partialsDir:'views/partials'
@@ -83,6 +83,10 @@ app.get('/', function (req, res) {
         moistureInput: moistureInput,
         moistureInput2: moistureInput2
     });
+});
+
+app.get('/chartonly', function (req, res) {
+    res.render('apphome',{});
 });
 
 app.get('/api/moistureData', (req, res) => {
