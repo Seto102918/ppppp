@@ -245,8 +245,7 @@ function createTopLeft(){
           .style("opacity", 0)
       }
 
-  /////////////////////////moisture data
-  
+  ////////////////////////
   svg.append("path")
     .datum(moistureData)
     .attr("fill", "none")
@@ -270,10 +269,8 @@ function createTopLeft(){
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave)
-
   
- /////////////////////////moisture data2
-
+ ////////////////////////
  svg.append("path")
     .datum(moistureData_2)
     .attr("fill", "none")
@@ -297,7 +294,6 @@ function createTopLeft(){
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave)
-
 
   svg
     .selectAll("myLabels")
